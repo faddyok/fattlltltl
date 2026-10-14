@@ -1,0 +1,692 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>
+:root{--bg:#080b11;--panel:#111620;--muted:#92a0b5;--line:#ffffff12;--purple:#7c5cff}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 0 0,#291a54,transparent 30%),var(--bg);color:white;font-family:Inter,system-ui;padding:18px}.wrap{max-width:1280px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:18px 0}.stat,.panel{background:#ffffff08;border:1px solid var(--line);border-radius:20px;padding:15px}.stat b{font-size:22px}.muted{color:var(--muted);font-size:12px}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:14px}.tab{border:1px solid var(--line);background:#111620;color:#cbd3df;padding:10px 13px;border-radius:13px;white-space:nowrap}.tab.active{background:white;color:#111}.view{display:none}.view.active{display:block}.layout{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.products{display:grid;gap:10px}.product,.order,.customer,.inv{display:flex;align-items:center;gap:12px;background:#0d121a;border:1px solid var(--line);border-radius:16px;padding:11px}.thumb{width:64px;height:64px;border-radius:13px;background:#1b2230;display:grid;place-items:center;font-size:30px;overflow:hidden}.thumb img{width:100%;height:100%;object-fit:cover}.info{flex:1}.btn,button{border:0;border-radius:11px;padding:9px 12px;background:#232b39;color:white;font-weight:800;cursor:pointer}.primary{background:linear-gradient(135deg,#7c5cff,#a24cff)}.danger{background:#5f2230}.good{background:#194c3b}.warn{background:#5c4619}input,textarea,select{width:100%;padding:11px;border-radius:11px;border:1px solid var(--line);background:#0b1018;color:white;margin:5px 0 10px}.row2{display:grid;grid-template-columns:1fr 1fr;gap:9px}.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.helper{background:#ffffff08;border:1px dashed var(--line);border-radius:14px;padding:10px;margin:8px 0 12px}.preview{display:flex;gap:12px;align-items:center;background:#0d121a;border:1px solid var(--line);border-radius:14px;padding:10px;margin:8px 0 12px}.preview .box{width:70px;height:70px;border-radius:14px;display:grid;place-items:center;background:#1b2230;font-size:28px;overflow:hidden}.preview img{width:100%;height:100%;object-fit:cover}.scroll{max-height:580px;overflow:auto}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.badge{display:inline-block;padding:3px 7px;border-radius:999px;background:#ffffff10;font-size:10px;margin-right:4px}.analytics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.big{font-size:30px;font-weight:950}.security{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.hide{display:none!important}
+
+.adminShell{display:grid;grid-template-columns:230px minmax(0,1fr);gap:16px;align-items:start}
+.sidebar{position:sticky;top:14px;background:#0d121a;border:1px solid var(--line);border-radius:22px;padding:12px;max-height:calc(100vh - 28px);overflow:auto}
+.sidebarTitle{padding:7px 9px 12px;font-weight:950;font-size:13px;color:#dce3ef}
+.tabs{display:grid;gap:6px;margin:0;overflow:visible}
+.tab{width:100%;display:flex;align-items:center;gap:8px;text-align:left;padding:11px 12px;border-radius:12px}
+.tab.active{background:linear-gradient(135deg,#ffffff,#d9d3ff);color:#0d1017}
+.mainArea{min-width:0}
+.pagebar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.pageTitle{font-size:22px;font-weight:950}
+.quickGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.quick{border:1px solid var(--line);background:linear-gradient(180deg,#151b27,#0d121a);border-radius:18px;padding:14px;cursor:pointer;text-align:left}
+.quick:hover{transform:translateY(-1px)}
+.quick .icon{font-size:24px}.quick b{display:block;margin-top:7px}.quick .muted{margin-top:4px}
+.sectionLabel{display:flex;align-items:center;gap:8px;margin:18px 0 9px;padding-bottom:7px;border-bottom:1px solid var(--line);font-weight:950}
+.formHelp{background:#0d121a;border-left:3px solid var(--purple);padding:10px 12px;border-radius:10px;margin:8px 0 12px;color:#cbd3df;font-size:12px}
+.stickyEditor{position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto}
+.productSearch{max-width:270px;margin:0}
+.statusDot{width:8px;height:8px;border-radius:50%;display:inline-block;background:#30c48d;margin-right:5px}.emptyState{padding:24px;border:1px dashed var(--line);border-radius:16px;text-align:center;color:var(--muted)}
+.mobileNavTitle{display:none}
+@media(max-width:980px){.adminShell{grid-template-columns:1fr}.sidebar{position:static;max-height:none}.tabs{display:flex;overflow:auto}.tab{width:auto}.mobileNavTitle{display:block}.stats{grid-template-columns:repeat(3,1fr)}.layout{grid-template-columns:1fr}.stickyEditor{position:static;max-height:none}.quickGrid{grid-template-columns:repeat(2,1fr)}.analytics,.security{grid-template-columns:1fr 1fr}}@media(max-width:560px){body{padding:10px}.stats{grid-template-columns:1fr 1fr}.quickGrid{grid-template-columns:1fr}.row2,.row3,.analytics,.security{grid-template-columns:1fr}.product,.order,.customer,.inv{align-items:flex-start;flex-wrap:wrap}}
+
+/* Admin usability pass */
+body{background:#0a0e14;padding:16px;color:#f5f7fb}
+.wrap{max-width:1380px}
+.top h1{font-size:23px;letter-spacing:-.02em}.top>.toolbar{gap:7px}
+.panel,.stat{background:#111720;border-color:#222b38;box-shadow:none}
+.sidebar{background:#0e141d;border-color:#222b38;border-radius:16px;padding:10px}
+.sidebarTitle{font-size:12px;color:#7f8da3;padding:6px 10px 8px;letter-spacing:.08em}
+.navLabel{font-size:10px;color:#657287;font-weight:900;letter-spacing:.1em;padding:13px 10px 5px;text-transform:uppercase}
+.tab{background:transparent;border-color:transparent;color:#b7c2d1;font-weight:750}
+.tab:hover{background:#151d28}.tab.active{background:#202a38;color:white}
+.navMore{margin-top:5px;border-top:1px solid #222b38;padding-top:6px}.navMore summary{list-style:none;cursor:pointer;padding:11px 12px;border-radius:12px;color:#aab7c8;font-weight:850}.navMore summary::-webkit-details-marker{display:none}.navMore summary:hover{background:#151d28}.navMore .tab{margin-top:3px}
+.pagebar{border-bottom:1px solid #1d2632;padding-bottom:10px}.pageTitle{font-size:20px}
+button,.btn{border:1px solid #2a3544;background:#1a2330;color:#f5f7fb;font-weight:800;transition:.15s ease}button:hover,.btn:hover{background:#222d3c}.primary{border-color:#6657da;background:#6758dc}.primary:hover{background:#7667e8}.danger{background:#3a1d25;border-color:#61303d}.good{background:#163a30;border-color:#245e4c}.warn{background:#3a311b;border-color:#66532a}
+input,textarea,select{background:#0d131c;border-color:#2a3442;margin:5px 0 11px}input:focus,textarea:focus,select:focus{outline:2px solid #6657da55;border-color:#7465e4}
+.quickGrid{grid-template-columns:repeat(4,1fr)}.quick{background:#111720;border-color:#222b38;border-radius:14px;padding:13px}.quick:hover{transform:none;background:#151d28}
+.attentionGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px}.attention{display:block;width:100%;text-align:left;padding:13px;border-radius:13px;background:#0d141d;border:1px solid #222d3a}.attention strong{display:block;font-size:24px;margin:4px 0}.attention .label{font-size:12px;font-weight:900}.attention.urgent{border-color:#80513e;background:#241914}.attention.ok{opacity:.7}
+.detailsCard{border:1px solid #26313e;border-radius:14px;background:#0e141d;margin:10px 0}.detailsCard>summary{cursor:pointer;list-style:none;padding:14px 15px;font-weight:900;display:flex;justify-content:space-between;align-items:center}.detailsCard>summary::-webkit-details-marker{display:none}.detailsCard>summary:after{content:'＋';color:#7f8da3}.detailsCard[open]>summary:after{content:'−'}.detailsBody{padding:0 15px 15px;border-top:1px solid #222b38}.detailsBody .sectionLabel{margin-top:14px}
+.saveBar{position:sticky;bottom:0;background:#111720f2;border-top:1px solid #293442;margin:18px -15px -15px;padding:12px 15px;display:flex;gap:8px;z-index:5;backdrop-filter:blur(8px)}
+.filterPills{display:flex;gap:6px;flex-wrap:wrap}.pill{padding:8px 11px;border-radius:999px;background:#111720;color:#aeb9c9}.pill.active{background:#e7e9ef;color:#10151d;border-color:#e7e9ef}.orderSearch{max-width:280px;margin:0}.order.needsAction{border-color:#5f4931;background:#17140f}.actionTag{display:inline-block;font-size:10px;font-weight:900;padding:4px 7px;border-radius:999px;background:#4c3721;color:#ffdca4;margin-left:5px}
+.fulfillBox{border:1px solid #313b48;background:#0d141d;border-radius:12px;padding:11px;margin-top:9px}.fulfillBox.pending{border-color:#5d4830}.fulfillBox b{line-height:1.5}
+dialog{width:min(620px,calc(100% - 24px));border:1px solid #303b49;border-radius:18px;background:#111720;color:#f5f7fb;padding:0;box-shadow:0 24px 80px #0009}dialog::backdrop{background:#05070bbf}.dialogHead{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:16px 18px;border-bottom:1px solid #26313e}.dialogBody{padding:17px 18px}.dialogActions{display:flex;justify-content:flex-end;gap:8px;padding:14px 18px;border-top:1px solid #26313e}.dialogHead h3{margin:0}.iconBtn{width:38px;height:38px;padding:0;border-radius:50%}
+.simpleHint{font-size:12px;color:#8e9caf;margin-top:-5px;margin-bottom:11px}.modePreview{padding:10px 12px;border-radius:11px;background:#151c26;margin:4px 0 12px;font-size:13px}
+@media(max-width:980px){.attentionGrid{grid-template-columns:1fr 1fr}.quickGrid{grid-template-columns:1fr 1fr}.navMore{border-top:0;padding:0}.navMore summary{display:block}.navMore .tabs{display:grid}}
+@media(max-width:560px){.attentionGrid,.quickGrid{grid-template-columns:1fr}.pagebar>button{width:100%}.saveBar{position:static}.orderSearch{max-width:none;width:100%}.filterPills{width:100%}.pill{flex:1}.top h1{font-size:20px}}
+
+.slaTag{display:inline-block;font-size:10px;font-weight:950;padding:4px 7px;border-radius:999px;margin-left:5px}.slaTag.warning{background:#4b391f;color:#ffdca4}.slaTag.urgent{background:#54222a;color:#ffb8c1}.slaTag.normal{background:#17352d;color:#9de4cb}.privateNote{margin-top:8px;padding:9px 10px;background:#111a26;border:1px solid #2c3948;border-radius:10px;font-size:12px;color:#c8d2df}.restrictionGrid{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.restrictionGrid button.on{background:#4b2028;border-color:#78404b}.templateCard{border:1px solid #273240;border-radius:13px;background:#0e141d;padding:12px;margin:8px 0}.backupGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.backupGrid .panel{margin:0}.fileLink{display:inline-flex;align-items:center;gap:6px;text-decoration:none;border:1px solid #2a3544;border-radius:11px;padding:9px 12px;background:#1a2330;color:#fff;font-weight:800}@media(max-width:700px){.backupGrid{grid-template-columns:1fr}}
+.methodGalleryAdmin{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:9px;margin:8px 0 12px}.methodGalleryItem{position:relative;border:1px solid #283342;background:#0c121a;border-radius:12px;overflow:hidden;aspect-ratio:1}.methodGalleryItem img{width:100%;height:100%;object-fit:cover;display:block}.methodGalleryItem button{position:absolute;right:5px;top:5px;width:30px;height:30px;padding:0;border-radius:50%;background:#451f29dd;border-color:#763747}.methodGalleryEmpty{padding:12px;border:1px dashed #2a3544;border-radius:12px;color:var(--muted);font-size:12px;margin:7px 0 12px}
+</style></head><body><div class="wrap">
+<div class="top"><div><h1 style="margin:0">⚡ Fattle Admin</h1><div class="muted">Orders, products, customers and fulfillment in one place</div></div><div class="toolbar"><button onclick="window.open('/','_blank')">↗ Store</button><button onclick="setupWebhook()">Telegram</button><form action="/admin/logout" method="post"><button>Log out</button></form></div></div>
+<div class="adminShell">
+<aside class="sidebar">
+  <div class="sidebarTitle">ADMIN</div>
+  <div class="tabs">
+    <div class="navLabel">Daily</div>
+    <button class="tab active" data-v="dashboardView" data-title="Dashboard" onclick="showView(this)">🏠 Dashboard</button>
+    <button class="tab" data-v="ordersView" data-title="Orders & Fulfillment" onclick="showView(this)">📥 Orders & Fulfillment</button>
+
+    <div class="navLabel">Catalog</div>
+    <button class="tab" data-v="productsView" data-title="Products" onclick="showView(this)">🛍 Products</button>
+    <button class="tab" data-v="inventoryView" data-title="Inventory" onclick="showView(this)">📦 Inventory</button>
+
+    <div class="navLabel">Customers</div>
+    <button class="tab" data-v="customersView" data-title="Customers" onclick="showView(this)">👥 Customers</button>
+    <button class="tab" data-v="remindersView" data-title="Reminders" onclick="showView(this)">⏰ Reminders</button>
+
+    <details class="navMore">
+      <summary>⚙ More tools</summary>
+      <div class="tabs">
+        <button class="tab" data-v="methodsView" data-title="Methods" onclick="showView(this)">📚 Methods</button>
+        <button class="tab" data-v="broadcastView" data-title="Broadcast" onclick="showView(this)">📣 Broadcast</button>
+        <button class="tab" data-v="analyticsView" data-title="Analytics" onclick="showView(this)">📊 Analytics</button>
+        <button class="tab" data-v="templatesView" data-title="Delivery Templates" onclick="showView(this)">🧾 Delivery Templates</button>
+        <button class="tab" data-v="backupsView" data-title="Backups" onclick="showView(this)">💾 Backups</button>
+        <button class="tab" data-v="securityView" data-title="Security" onclick="showView(this)">🔐 Security</button>
+      </div>
+    </details>
+  </div>
+</aside>
+
+<main class="mainArea">
+<div class="pagebar"><div><div class="muted">Fattle Control Center</div><div id="pageTitle" class="pageTitle">Dashboard</div></div><button onclick="load()">↻ Refresh data</button></div>
+
+<section id="dashboardView" class="view active">
+  <div id="stats" class="stats"></div>
+  <div class="panel">
+    <div class="top"><div><h2 style="margin:0">Needs attention</h2><div class="muted">Only things that may need you now.</div></div><button onclick="load()">↻ Refresh</button></div>
+    <div id="attention" class="attentionGrid"></div>
+  </div>
+  <div class="panel" style="margin-top:12px">
+    <div><h2 style="margin:0">Common tasks</h2><div class="muted">Most admin work should be one click away.</div></div>
+    <div class="quickGrid">
+      <button class="quick" onclick="openView('ordersView')"><span class="icon">📥</span><b>Fulfill orders</b><span class="muted">Prepare requested products and email subscriptions.</span></button>
+      <button class="quick" onclick="openView('productsView');newProduct()"><span class="icon">➕</span><b>Add product</b><span class="muted">Create a new shop listing.</span></button>
+      <button class="quick" onclick="openView('customersView')"><span class="icon">💳</span><b>Customer credits</b><span class="muted">Find a customer and adjust balance.</span></button>
+      <button class="quick" onclick="openView('inventoryView')"><span class="icon">📦</span><b>Check stock</b><span class="muted">Review available and sold inventory.</span></button>
+    </div>
+  </div>
+</section>
+
+<section id="productsView" class="view">
+<div class="layout">
+  <div class="panel">
+    <div class="top"><div><h2 style="margin:0">Products <span id="productCount" class="badge">0</span></h2><div class="muted">Search, edit, or add a listing.</div></div><div class="toolbar"><input id="productSearch" class="productSearch" placeholder="Search products…" oninput="renderProducts()"><button class="primary" onclick="newProduct()">+ New</button></div></div>
+    <div id="products" class="products"></div>
+  </div>
+  <div class="panel stickyEditor">
+    <h2 id="formTitle" style="margin-bottom:4px">Add product</h2>
+    <div id="editHint" class="simpleHint">Start with the basics. Open advanced sections only when you need them.</div>
+    <form id="form">
+      <input type="hidden" name="id" id="pid">
+      <details class="detailsCard" open>
+        <summary>1. Basic information</summary>
+        <div class="detailsBody">
+          <label>Product name</label><input name="name" id="name" required>
+          <div class="row2"><div><label>Base price</label><input name="price" id="price" type="number" min="0" required></div><div><label>Category</label><input name="category" id="category" placeholder="Subscriptions"></div></div>
+          <div class="row2"><div><label>Emoji</label><input name="emoji" id="emoji" value="🔑"></div><div></div></div>
+          <label>Description</label><textarea name="description" id="description" rows="3"></textarea>
+        </div>
+      </details>
+
+      <details class="detailsCard" open>
+        <summary>2. Fulfillment & subscription</summary>
+        <div class="detailsBody">
+          <label>How is this delivered?</label>
+          <select name="fulfillment_mode" id="fulfillment_mode" onchange="updateFulfillmentHelp();loginAssistanceSafetyNote()"><option value="instant">⚡ Instant — use saved inventory</option><option value="email">📧 Email — ask customer email, fulfill later</option><option value="manual">🛠 By request — prepare and deliver later</option><option value="login_assist">🔐 Send activation code to admin — customer sends code for activation</option></select>
+          <div id="fulfillmentHelp" class="modePreview"></div>
+          <label>Activation request message <span class="muted">(used only for 🔐 Login Assistance)</span></label>
+          <textarea name="activation_prompt" id="activation_prompt" rows="3" maxlength="4000" placeholder="Example: Open the service on your device, choose Login, enter the code it shows you, then send that code here."></textarea>
+          <div class="simpleHint">After purchase, the bot shows this message and asks the customer to send the activation code. The submitted code is forwarded to the admin with the product and order details.</div>
+          <div class="row2"><div><label>Subscription duration (days)</label><input name="subscription_days" id="subscription_days" type="number" min="0" value="0" placeholder="30"><div class="simpleHint">0 = no automatic expiry reminder.</div></div><div><label>Private reminder note</label><textarea name="reminder_note" id="reminder_note" rows="2" placeholder="Optional note for you"></textarea></div></div>
+        </div>
+      </details>
+
+      <details class="detailsCard">
+        <summary>Customer delivery notes</summary>
+        <div class="detailsBody">
+          <label>Instructions</label><textarea name="instructions" id="instructions" rows="4"></textarea>
+          <div class="row2"><div><label>Warranty / terms</label><textarea name="warranty" id="warranty" rows="3"></textarea></div><div><label>Support note</label><textarea name="support_note" id="support_note" rows="3"></textarea></div></div>
+          <label>Delivery note</label><textarea name="delivery_note" id="delivery_note" rows="3"></textarea>
+        </div>
+      </details>
+
+      <details class="detailsCard">
+        <summary>Security & paid OTP</summary>
+        <div class="detailsBody">
+          <div class="top"><div><b>🔐 Special purchase key</b><div class="simpleHint">Require a private key even when the user has enough credits.</div></div><label><input style="width:auto" type="checkbox" id="purchase_key_required"> Require key</label></div>
+          <label>New / replacement key</label><input name="purchase_key" id="purchase_key" type="password" autocomplete="new-password" placeholder="Leave blank to keep current key">
+          <input type="hidden" name="purchase_key_required" id="purchaseKeyRequiredVal" value="0"><div class="simpleHint" id="purchaseKeyHint"></div>
+          <hr style="border:0;border-top:1px solid #26313e;margin:15px 0">
+          <div class="top"><div><b>🔐 Paid OTP</b><div class="simpleHint">For authorized accounts using TOTP.</div></div><label><input style="width:auto" type="checkbox" id="otp_enabled"> Enable</label></div>
+          <label>OTP price</label><input name="otp_price" id="otp_price" type="number" min="1" value="10">
+          <input type="hidden" name="otp_enabled" id="otpEnabledVal" value="0">
+        </div>
+      </details>
+
+      <details class="detailsCard">
+        <summary>Variants & add inventory</summary>
+        <div class="detailsBody">
+          <label>Variants — one per line</label><textarea name="variants_text" id="variants_text" rows="4" placeholder="1 Month|100|3|30&#10;3 Months|250|2|90"></textarea>
+          <div class="simpleHint">Format: Label | Price | Low-stock threshold | Subscription days</div>
+          <div class="sectionLabel">Add an account</div>
+          <div class="row2"><div><label>Variant</label><select id="accountVariant"></select><div class="simpleHint" id="accountVariantHint"></div></div><div><label>Email</label><input id="accountEmail" placeholder="customer@example.com"></div></div>
+          <div class="row2"><div><label>Password</label><input id="accountPassword"></div><div><label>Profile</label><input id="accountProfile" placeholder="Profile / Family"></div></div>
+          <div class="row2"><div><label>PIN</label><input id="accountPin"></div><div><label>Username / ID</label><input id="accountUsername"></div></div>
+          <label>TOTP secret (optional)</label><input id="accountTotp" placeholder="Base32 authenticator secret">
+          <button type="button" class="primary" style="width:100%;padding:12px" onclick="addStructuredInventory()">＋ Add account to queue</button>
+          <label style="margin-top:12px;display:block">New inventory queue</label><textarea name="digital_inventory" id="digital_inventory" rows="6" placeholder="New accounts waiting to be saved appear here."></textarea>
+          <div class="simpleHint" id="inventoryHint">Existing inventory is preserved. This box is only for new stock.</div>
+        </div>
+      </details>
+
+      <details class="detailsCard">
+        <summary>Image & visibility</summary>
+        <div class="detailsBody">
+          <div id="currentPreview" class="preview hide"><div class="box" id="previewBox">🔑</div><div><b>Current image</b><div class="simpleHint">Leave image fields empty to keep it.</div><div class="muted" id="productMeta"></div></div></div>
+          <label>Image URL</label><input name="image_url" id="image_url" placeholder="https://...">
+          <label>Or upload image</label><input name="image_file" id="image_file" type="file" accept="image/*">
+          <div class="row2"><label><input style="width:auto" type="checkbox" id="active" checked> Active</label><label><input style="width:auto" type="checkbox" id="featured"> ⭐ Featured</label></div>
+          <div class="row2"><label><input style="width:auto" type="checkbox" id="bestseller"> 🔥 Bestseller</label><label><input style="width:auto" type="checkbox" id="badge_new"> ✨ New</label></div>
+          <input type="hidden" name="active" id="activeVal" value="1"><input type="hidden" name="featured" id="featuredVal" value="0"><input type="hidden" name="bestseller" id="bestsellerVal" value="0"><input type="hidden" name="badge_new" id="badgeNewVal" value="0">
+        </div>
+      </details>
+
+      <div class="saveBar"><button id="saveBtn" class="primary" style="flex:1;padding:12px">Save product</button><button type="button" onclick="newProduct()">Cancel</button></div>
+    </form>
+  </div>
+</div>
+</section>
+
+
+<section id="methodsView" class="view">
+  <div class="layout">
+    <div class="panel">
+      <div class="top"><div><h2>📚 Methods</h2><div class="muted">Separate marketplace section for free and premium Methods. These are independent from shop products.</div></div><button class="primary" onclick="newMethod()">+ New method</button></div>
+      <div id="methodsList" class="products"></div>
+    </div>
+    <div class="panel">
+      <h2 id="methodFormTitle">Add method</h2>
+      <div class="helper">Methods are separate digital content. Set a credit price, or mark one as FREE. Customers unlock the full text after purchase/claim.</div>
+      <form id="methodForm">
+        <input type="hidden" name="id" id="methodId">
+        <label>Method title</label><input name="title" id="methodTitle" required placeholder="How to activate your product">
+        <label>Short description / preview</label><textarea name="summary" id="methodSummary" rows="3" placeholder="Tell customers what this method is about without revealing the full content."></textarea>
+<label>Full method content</label><textarea name="body" id="methodBody" rows="10" placeholder="Write the full method here..."></textarea>
+<div class="row2"><div><label>Price (credits)</label><input name="price" id="methodPrice" type="number" min="0" value="0"></div><label><input style="width:auto" type="checkbox" id="methodFree"> FREE method</label></div>
+<input type="hidden" name="is_free" id="methodFreeVal" value="0">
+<div class="row2"><div><label>Sort order</label><input name="sort_order" id="methodSort" type="number" value="0"></div><label><input style="width:auto" type="checkbox" id="methodActive" checked> Active</label></div>
+        <input type="hidden" name="active" id="methodActiveVal" value="1">
+        <div id="methodPreview" class="preview hide"><div class="box" id="methodPreviewBox">📘</div><div><b>Current image</b><div class="muted">Leave image fields empty to keep it.</div></div></div>
+        <label>Image URL (optional)</label><input name="image_url" id="methodImageUrl" placeholder="https://...">
+        <label>OR upload cover image (optional)</label><input name="image_file" id="methodImageFile" type="file" accept="image/*">
+        <div class="sectionLabel">Method gallery</div>
+        <div class="simpleHint">Add screenshots or step images customers can view in the Method. Up to 8 images; without Cloudinary, each uploaded gallery image must be 2 MB or smaller.</div>
+        <div id="methodGalleryPreview" class="methodGalleryEmpty">No gallery images.</div>
+        <label>Add image URLs — one per line</label><textarea name="gallery_urls" id="methodGalleryUrls" rows="3" placeholder="https://example.com/step-1.jpg&#10;https://example.com/step-2.jpg"></textarea>
+        <label>Or upload gallery images</label><input name="gallery_files" id="methodGalleryFiles" type="file" accept="image/*" multiple>
+        <div class="toolbar"><button class="primary" id="methodSaveBtn" style="flex:1;padding:13px">Save method</button><button type="button" onclick="newMethod()">Cancel edit</button></div>
+      </form>
+    </div>
+  </div>
+</section>
+<section id="inventoryView" class="view"><div class="panel"><div class="top"><div><h2>Inventory dashboard</h2><div class="muted">Available, sold, low-stock and out-of-stock digital items.</div></div><select id="invProduct" style="max-width:360px" onchange="loadInventory()"></select></div><div id="invSummary" class="stats" style="grid-template-columns:repeat(4,1fr)"></div><div id="inventory" class="scroll"></div></div></section>
+<section id="ordersView" class="view"><div class="panel"><div class="top"><div><h2 style="margin:0">Orders & fulfillment</h2><div class="muted">Starts with orders that still need your action. Waiting-time alerts use the configured SLA thresholds.</div></div><div class="toolbar"><button onclick="runSlaCheck()">⚠ Check overdue</button><button onclick="loadOrders()">↻ Refresh</button></div></div><div class="toolbar" style="margin:13px 0"><div class="filterPills"><button class="pill active" data-order-filter="action" onclick="setOrderFilter('action',this)">Needs action</button><button class="pill" data-order-filter="all" onclick="setOrderFilter('all',this)">All orders</button><button class="pill" data-order-filter="done" onclick="setOrderFilter('done',this)">Completed</button></div><input id="orderSearch" class="orderSearch" placeholder="Search all orders, customer IDs, products…" aria-label="Search all orders" oninput="queueOrderSearch()"></div><div class="toolbar" style="margin-bottom:14px;align-items:end;flex-wrap:wrap"><label style="margin:0">From (UTC)<input id="orderDateFrom" type="date" onchange="queueOrderSearch()"></label><label style="margin:0">Through (UTC)<input id="orderDateTo" type="date" onchange="queueOrderSearch()"></label><button onclick="clearOrderSearch()">Clear search</button><button id="orderExport" onclick="exportOrders()">↓ Export matching orders</button></div><div id="orders" class="scroll" aria-live="polite"></div><div class="toolbar" style="justify-content:space-between;margin-top:18px"><button id="orderPrev" onclick="loadOrders(orderPage-1)" disabled>← Previous</button><span id="orderPageInfo" role="status">Loading orders…</span><button id="orderNext" onclick="loadOrders(orderPage+1)" disabled>Next →</button></div></div></section>
+<section id="remindersView" class="view"><div class="layout"><div class="panel"><div class="top"><div><h2>⏰ Subscription reminders</h2><div class="muted">Automatic reminders from sold subscription products plus manual reminders for anything not listed in the shop.</div></div><div class="toolbar"><button onclick="processReminders()">Run due check</button><button onclick="loadReminders()">Refresh</button></div></div><div id="remindersList" class="scroll"></div></div><div class="panel stickyEditor"><h2 id="reminderFormTitle">Add manual reminder</h2><div class="helper">You receive the Telegram notification about 24 hours before the expiry time. Use a custom title for non-listed products.</div><input type="hidden" id="reminderId"><label>Reminder title / subscription name</label><input id="reminderTitle" placeholder="Netflix Premium - personal slot"><label>Optional linked listed product</label><select id="reminderProduct" onchange="reminderProductChanged()"><option value="">Non-listed / custom item</option></select><label>Expiry date & time</label><input id="reminderExpiry" type="datetime-local"><div class="row2"><div><label>Customer Telegram ID (optional)</label><input id="reminderUserId" inputmode="numeric" placeholder="123456789"></div><div><label>Email (optional)</label><input id="reminderEmail" type="email" placeholder="customer@example.com"></div></div><label>Custom notification note</label><textarea id="reminderMessage" rows="4" placeholder="Example: Renew this account first; supplier is ABC."></textarea><div class="toolbar"><button class="primary" style="flex:1" onclick="saveReminder()">Save reminder</button><button onclick="newReminder()">Clear</button></div></div></div></section>
+<section id="customersView" class="view"><div class="layout"><div class="panel"><div class="top"><h2>Customer profiles</h2><input id="customerSearch" style="max-width:280px" placeholder="Search name, ID, username" oninput="renderCustomers()"></div><div id="customers" class="scroll"></div></div><div class="panel" id="profile"><h2>Select a customer</h2><div class="muted">Profile shows balance, total orders, total credits spent, last purchase and order history.</div></div></div></section>
+<section id="analyticsView" class="view"><div class="panel"><h2>Sales analytics</h2><div id="analytics"></div></div></section>
+
+<section id="broadcastView" class="view">
+  <div class="layout">
+    <div class="panel">
+      <h2>📣 Broadcast Center</h2>
+      <div class="helper">Send an announcement to customers who have started the bot. Delivery is processed in small batches so it is safer for Vercel serverless.</div>
+      <div id="broadcastStats" class="stats" style="grid-template-columns:repeat(3,1fr)"></div>
+
+      <label>Message</label>
+      <textarea id="broadcastMessage" rows="9" maxlength="3900" placeholder="Write your announcement here..."></textarea>
+
+      <label>Optional image URL</label>
+      <input id="broadcastImage" placeholder="https://res.cloudinary.com/...">
+
+      <div class="row2">
+        <div><label>Optional button text</label><input id="broadcastButtonText" placeholder="Open Shop"></div>
+        <div><label>Optional button URL</label><input id="broadcastButtonUrl" placeholder="https://..."></div>
+      </div>
+
+      <div class="helper">
+        Customers can disable announcements with <code>/stopbroadcast</code> and enable them again with <code>/startbroadcast</code>.
+      </div>
+
+      <button id="broadcastSendBtn" class="primary" style="width:100%;padding:14px" onclick="startBroadcast()">📣 Send Broadcast</button>
+      <div id="broadcastProgress" class="helper hide" style="margin-top:12px"></div>
+    </div>
+
+    <div class="panel">
+      <div class="top"><h2>Recent broadcasts</h2><button onclick="loadBroadcastStats()">Refresh</button></div>
+      <div id="broadcastHistory" class="scroll"></div>
+    </div>
+  </div>
+</section>
+<section id="templatesView" class="view"><div class="layout"><div class="panel"><div class="top"><div><h2>🧾 Delivery templates</h2><div class="muted">Reusable prepared-delivery text. Maximum 50 templates; use placeholders to save time.</div></div><button onclick="loadTemplates()">↻ Refresh</button></div><div id="templatesList" class="scroll"></div></div><div class="panel stickyEditor"><h2 id="templateFormTitle">Add template</h2><input type="hidden" id="templateId"><label>Template name</label><input id="templateName" maxlength="60" placeholder="Netflix account delivery"><label>Use for</label><select id="templateProduct"><option value="">All products</option></select><label>Template body</label><textarea id="templateBody" rows="12" maxlength="3000" placeholder="Netflix Premium&#10;&#10;Email: &#123;&#123;email&#125;&#125;&#10;Password: ..."></textarea><div class="simpleHint">Placeholders: <code>&#123;&#123;order_code&#125;&#125;</code>, <code>&#123;&#123;customer_id&#125;&#125;</code>, <code>&#123;&#123;product&#125;&#125;</code>, <code>&#123;&#123;variant&#125;&#125;</code>, <code>&#123;&#123;email&#125;&#125;</code>, <code>&#123;&#123;qty&#125;&#125;</code>.</div><label><input id="templateActive" type="checkbox" style="width:auto" checked> Active</label><div class="toolbar"><button class="primary" style="flex:1" onclick="saveTemplate()">Save template</button><button onclick="newTemplate()">Clear</button></div></div></div></section>
+<section id="backupsView" class="view"><div class="backupGrid"><div class="panel"><h2>💾 Backup & export</h2><div class="helper">Backups are generated on demand and are not stored back inside MongoDB. Inventory stays encrypted in the export.</div><div class="toolbar"><a class="fileLink" href="/api/admin/backup.zip">⬇ Download core backup</a><a class="fileLink" href="/api/admin/backup.zip?include_images=1">🖼 Download with images</a></div><button class="primary" style="width:100%;margin-top:12px" onclick="sendBackupTelegram()">📨 Send core backup to Telegram</button></div><div class="panel"><h2>Automatic backup</h2><div id="backupStatus" class="helper">Loading…</div><label>Schedule</label><select id="backupSchedule"><option value="off">Off</option><option value="daily">Daily</option><option value="weekly">Weekly</option></select><button style="width:100%" onclick="saveBackupSchedule()">Save schedule</button><div class="simpleHint" style="margin-top:10px">The scheduled export is sent to your admin Telegram and only tiny schedule metadata is kept in MongoDB.</div></div></div></section>
+<section id="securityView" class="view"><div class="panel"><h2>Security & integrations</h2><div id="security" class="security"></div><div class="helper" style="margin-top:16px"><b>Group gate:</b> Add the bot to your required group as an admin, then run <code>/bindgroup</code> inside that group. Telegram membership checks for other users are reliable when the bot is an administrator.</div><div class="helper"><b>Referral rule:</b> +10 credits is awarded only after the referred user starts through the referral link and successfully passes the group membership check.</div></div></section>
+</main></div>
+</div>
+<dialog id="fulfillDialog">
+  <div class="dialogHead"><div><h3 id="fulfillTitle">Fulfill order</h3><div id="fulfillSub" class="muted"></div></div><button type="button" class="iconBtn" onclick="closeFulfillmentDialog()">✕</button></div>
+  <div class="dialogBody">
+    <input type="hidden" id="fulfillMode"><input type="hidden" id="fulfillCode"><input type="hidden" id="fulfillIndex">
+    <div id="manualDeliveryFields"><label>Saved template (optional)</label><select id="fulfillTemplate" onchange="applyFulfillmentTemplate()"><option value="">Write manually</option></select><div class="simpleHint">Choose a saved template, then edit any placeholders/details before sending.</div><label>Prepared delivery</label><textarea id="fulfillDelivery" rows="8" maxlength="3000" placeholder="Email / login / password / profile / instructions…"></textarea><div class="simpleHint">This is sent privately to the customer and stored encrypted.</div></div>
+    <label>Custom expiry (optional)</label><input id="fulfillExpiry" type="datetime-local"><div id="fulfillExpiryHelp" class="simpleHint">Leave blank to use the product subscription duration.</div>
+  </div>
+  <div class="dialogActions"><button type="button" onclick="closeFulfillmentDialog()">Cancel</button><button type="button" id="fulfillSubmit" class="good" onclick="submitFulfillment()">Complete fulfillment</button></div>
+</dialog>
+<dialog id="noteDialog"><div class="dialogHead"><div><h3 id="noteTitle">Private note</h3><div class="muted">Visible only to admin. Saving replaces the previous note instead of creating a log.</div></div><button type="button" class="iconBtn" onclick="closeNoteDialog()">✕</button></div><div class="dialogBody"><input type="hidden" id="noteTarget"><input type="hidden" id="noteKey"><textarea id="noteText" rows="8" maxlength="2000" placeholder="Private admin note…"></textarea></div><div class="dialogActions"><button onclick="closeNoteDialog()">Cancel</button><button class="primary" onclick="saveInternalNote()">Save note</button></div></dialog>
+<div id="toast" style="position:fixed;right:16px;bottom:16px;z-index:30;display:none;background:#17202c;border:1px solid #334154;border-radius:12px;padding:11px 14px;max-width:360px;font-weight:800"></div><script>
+let plist=[],clist=[],olist=[],methodsData=[],remindersData=[],templatesData=[],backupData={},statsData={},orderNoteCache={},orderFilter='action',fulfillContext=null;const $=id=>document.getElementById(id);const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));const money=n=>Number(n||0).toLocaleString()+' credits';
+function showView(btn){if(!btn)return;btn.closest('details')?.setAttribute('open','');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(btn.dataset.v).classList.add('active');$('pageTitle').textContent=btn.dataset.title||btn.textContent.trim();history.replaceState(null,'','#'+btn.dataset.v.replace('View','').replace('dashboard','dashboard'));if(btn.dataset.v==='productsView')loadProducts();if(btn.dataset.v==='methodsView')loadMethods();if(btn.dataset.v==='inventoryView')loadInventory();if(btn.dataset.v==='ordersView')loadOrders();if(btn.dataset.v==='remindersView')loadReminders();if(btn.dataset.v==='analyticsView')loadAnalytics();if(btn.dataset.v==='broadcastView')loadBroadcastStats();if(btn.dataset.v==='templatesView')loadTemplates();if(btn.dataset.v==='backupsView')loadBackupStatus();window.scrollTo({top:0,behavior:'smooth'})}
+function openView(viewId){const btn=document.querySelector(`.tab[data-v="${viewId}"]`);showView(btn)}
+function updateFulfillmentHelp(){const mode=$('fulfillment_mode')?.value||'instant',box=$('fulfillmentHelp');if(!box)return;box.innerHTML=mode==='instant'?'⚡ <b>Instant:</b> customer receives an account from saved inventory immediately.':mode==='email'?'📧 <b>Email fulfillment:</b> customer enters their email; you activate the subscription later from Orders.':'🛠 <b>By request:</b> customer pays, you prepare the account/order, then deliver it from Orders.'}
+function loginAssistanceSafetyNote(){
+  const mode=document.getElementById('fulfillment_mode')?.value;
+  const hint=document.getElementById('fulfillmentHelp');
+  if(mode==='login_assist' && hint){
+    hint.textContent='Customer uses the store-generated activation code and sends it to the admin for activation. Do not request or store passwords, third-party OTPs, or authentication tokens.';
+  }
+}
+function notify(msg){const t=$('toast');if(!t)return alert(msg);t.textContent=msg;t.style.display='block';clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>t.style.display='none',2800)}
+async function api(url,opt){let r=await fetch(url,opt);if(r.status===401){location='/admin';throw Error('Login expired')}if(!r.ok){let msg=await r.text();try{const d=JSON.parse(msg);msg=d.detail||msg}catch{}throw Error(msg)}return r.json()}
+async function loadStats(){
+  try{
+    statsData=await api('/api/admin/stats');
+    renderStats();
+    renderSecurity();
+  }catch(e){
+    console.error('Stats load failed',e);
+    $('stats').innerHTML='<div class="emptyState">Could not load dashboard stats.</div>';
+  }
+}
+async function loadProducts(){
+  const box=$('products');
+  if(box)box.innerHTML='<div class="emptyState">Loading products…</div>';
+  try{
+    const data=await api('/api/admin/products');
+    plist=Array.isArray(data)?data:[];
+    renderProducts();
+    fillInvProducts();
+    fillReminderProducts();
+    fillTemplateProducts();
+  }catch(e){
+    console.error('Products load failed',e);
+    if(box)box.innerHTML=`<div class="emptyState">❌ Could not load products.<br><br><button onclick="loadProducts()">Retry</button><div class="muted" style="margin-top:8px">${esc(e.message)}</div></div>`;
+  }
+}
+async function loadCustomers(){
+  try{
+    const data=await api('/api/admin/customers');
+    clist=Array.isArray(data)?data:[];
+    renderCustomers();
+  }catch(e){
+    console.error('Customers load failed',e);
+    if($('customers'))$('customers').innerHTML='<div class="emptyState">Could not load customers.</div>';
+  }
+}
+async function load(){
+  await Promise.allSettled([loadStats(),loadProducts(),loadCustomers()]);
+}
+function renderStats(){let a=[['Today',money(statsData.today?.revenue||0)],['Total revenue',money(statsData.revenue||0)],['Orders',Number(statsData.orders||0).toLocaleString()],['Customers',Number(statsData.customers||0).toLocaleString()]];$('stats').innerHTML=a.map(x=>`<div class="stat"><div class="muted">${x[0]}</div><b>${x[1]}</b></div>`).join('');renderAttention()}
+function renderAttention(){const box=$('attention');if(!box)return;const manual=Number(statsData.pending_manual||0),email=Number(statsData.pending_email||0),stock=Number(statsData.low||0)+Number(statsData.out||0),due=Number(statsData.due_reminders||0),overdue=Number(statsData.sla_warning||0)+Number(statsData.sla_urgent||0);box.innerHTML=[
+  {n:overdue,label:'Overdue fulfillment',icon:'⚠️',go:"openView('ordersView')"},
+  {n:manual,label:'By-request orders',icon:'🛠',go:"openView('ordersView')"},
+  {n:email,label:'Email fulfillment',icon:'📧',go:"openView('ordersView')"},
+  {n:stock,label:'Stock attention',icon:'📦',go:"openView('inventoryView')"},
+  {n:due,label:'Reminders due',icon:'⏰',go:"openView('remindersView')"}
+].map(x=>`<button class="attention ${x.n?'urgent':'ok'}" onclick="${x.go}"><span class="label">${x.icon} ${x.label}</span><strong>${x.n}</strong><span class="muted">${x.n?'Open to handle':'Nothing waiting'}</span></button>`).join('')}
+function renderProducts(){
+  const box=$('products');if(!box)return;
+  const q=($('productSearch')?.value||'').toLowerCase();
+  if($('productCount'))$('productCount').textContent=String((plist||[]).length);const rows=(plist||[]).filter(x=>`${x.name||''} ${x.category||''} ${x.description||''}`.toLowerCase().includes(q));
+  if(!rows.length){
+    box.innerHTML=`<div class="emptyState">${q?'No products match your search.':'No products were returned by the server.'}<br><br><button onclick="loadProducts()">↻ Reload product list</button></div>`;
+    return;
+  }
+  box.innerHTML=rows.map(x=>`<div class="product">
+    <div class="thumb">${x.image?`<img src="${esc(x.image)}">`:esc(x.emoji||'🔑')}</div>
+    <div class="info">
+      <b>${esc(x.name||'Unnamed product')}</b>
+      <div class="muted">${money(x.price)} • ${x.fulfillment_mode==='email'?'email fulfillment':x.fulfillment_mode==='manual'?'fulfilled by request':x.fulfillment_mode==='login_assist'?'login assistance':Number(x.stock||0)+' available'} • ${Number(x.sold_count||0)} sold • ❤️ ${Number(x.wishlist_count||0)}</div>
+      <div>${x.featured?'<span class="badge">⭐ Featured</span>':''}${x.bestseller?'<span class="badge">🔥 Bestseller</span>':''}${x.badge_new?'<span class="badge">✨ New</span>':''}${x.purchase_key_required?'<span class="badge">🔐 Key locked</span>':''}${x.fulfillment_mode==='email'?'<span class="badge">📧 Email setup</span>':''}${x.fulfillment_mode==='manual'?'<span class="badge">🛠 Fulfilled by request</span>':''}${x.fulfillment_mode==='login_assist'?'<span class="badge">🔐 Login assistance</span>':''}${(x.subscription_days||0)>0?`<span class="badge">⏰ ${x.subscription_days}d reminder</span>`:''}${!x.active?'<span class="badge">Hidden</span>':''}</div>
+    </div>
+    <div><button onclick="editProduct('${x.id}')">Edit</button> <button class="danger" onclick="deleteProduct('${x.id}')">Delete</button></div>
+  </div>`).join('');
+}
+
+function parsedVariantRows(){
+  const box=$('variants_text');
+  const raw=(box?.value||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  if(!raw.length){
+    return [{label:'Standard',price:Number($('price')?.value||0),low_stock:3,subscription_days:Number($('subscription_days')?.value||0)}];
+  }
+  const seen=new Set();
+  const rows=[];
+  for(const line of raw){
+    const parts=line.split('|').map(x=>x.trim());
+    const label=parts[0]||'Standard';
+    if(seen.has(label.toLowerCase()))continue;
+    seen.add(label.toLowerCase());
+    rows.push({
+      label,
+      price:Number(parts[1]||$('price')?.value||0),
+      low_stock:Number(parts[2]||3),
+      subscription_days:Number(parts[3]||$('subscription_days')?.value||0)
+    });
+  }
+  return rows.length?rows:[{label:'Standard',price:Number($('price')?.value||0),low_stock:3,subscription_days:Number($('subscription_days')?.value||0)}];
+}
+
+function refreshAccountVariants(){
+  const select=$('accountVariant');
+  if(!select)return;
+  const rows=parsedVariantRows();
+  const previous=select.value;
+  select.innerHTML=rows.map(v=>`<option value="${esc(v.label)}">${esc(v.label)} • ${money(v.price)}</option>`).join('');
+  if(rows.some(v=>v.label===previous))select.value=previous;
+  else select.selectedIndex=0;
+  const selected=rows.find(v=>v.label===select.value)||rows[0];
+  const hint=$('accountVariantHint');
+  if(hint)hint.textContent=`Selected: ${selected.label} • ${money(selected.price)}. New account stock will be added to this variant.`;
+}
+
+function addStructuredInventory(){
+  const variant=$('accountVariant')?.value||'Standard';
+  const email=$('accountEmail').value.trim();
+  const password=$('accountPassword').value.trim();
+  const profile=$('accountProfile').value.trim();
+  const pin=$('accountPin').value.trim();
+  const username=$('accountUsername').value.trim();
+  const totp_secret=$('accountTotp').value.trim().replace(/\s+/g,'').toUpperCase();
+
+  if(!email && !username)return alert('Enter an Email or Username / ID.');
+  if(!password)return alert('Enter the Password.');
+
+  const payload=JSON.stringify({email,password,profile,pin,username,totp_secret});
+  const rows=parsedVariantRows();
+
+  // Backend multi-variant syntax: VariantLabel|<inventory payload>.
+  // If there is only one Standard variant, no prefix is needed.
+  const line=(rows.length>1 || rows[0].label!=='Standard')
+    ? `${variant}|${payload}`
+    : payload;
+
+  const queue=$('digital_inventory');
+  queue.value+=(queue.value.trim()?'\n':'')+line;
+
+  $('accountEmail').value='';
+  $('accountPassword').value='';
+  $('accountProfile').value='';
+  $('accountPin').value='';
+  $('accountUsername').value='';
+  $('accountTotp').value='';
+
+  const hint=$('inventoryHint');
+  if(hint)hint.textContent=`✅ Account queued for "${variant}". Save the product to add it to inventory.`;
+}
+
+$('accountVariant')?.addEventListener('change',refreshAccountVariants);
+$('price')?.addEventListener('input',refreshAccountVariants);$('subscription_days')?.addEventListener('input',refreshAccountVariants);
+
+function variantsToText(x){return (x.variants||[]).map(v=>`${v.label}|${v.price}|${v.low_stock??3}|${v.subscription_days??x.subscription_days??0}`).join('\n')}
+function resetProductSections(){document.querySelectorAll('#form>.detailsCard').forEach((d,i)=>d.open=i<2)}
+function newProduct(){
+ resetProductSections();$('form').reset();$('pid').value='';$('emoji').value='🔑';$('active').checked=true;$('featured').checked=false;$('bestseller').checked=false;$('badge_new').checked=false;$('otp_enabled').checked=false;$('otp_price').value=10;
+ $('fulfillment_mode').value='instant';$('activation_prompt').value='';$('subscription_days').value=0;$('reminder_note').value='';$('purchase_key_required').checked=false;$('purchase_key').value='';$('purchaseKeyRequiredVal').value=0;
+ $('formTitle').textContent='Add product';$('saveBtn').textContent='Save product';$('editHint').textContent='Each product can have variants, a purchase key, instant/email/by-request/login-assistance fulfillment, and expiry reminders.';$('currentPreview').classList.add('hide');$('image_url').value='';$('image_file').value='';
+ $('purchaseKeyHint').textContent='The key is stored as a one-way keyed hash. It is never sent to the storefront. Enter a new value anytime to rotate it.';
+ refreshAccountVariants();updateFulfillmentHelp();loginAssistanceSafetyNote()
+}
+function editProduct(id){
+ resetProductSections();let x=plist.find(p=>p.id===id);if(!x)return;
+ $('pid').value=x.id;$('name').value=x.name||'';$('price').value=x.price||0;$('category').value=x.category||'';$('emoji').value=x.emoji||'🔑';$('description').value=x.description||'';$('instructions').value=x.instructions||'';$('warranty').value=x.warranty||'';$('support_note').value=x.support_note||'';$('delivery_note').value=x.delivery_note||'';
+ $('fulfillment_mode').value=x.fulfillment_mode||'instant';$('activation_prompt').value=x.activation_prompt||'';$('subscription_days').value=x.subscription_days||0;$('reminder_note').value=x.reminder_note||'';$('purchase_key_required').checked=!!x.purchase_key_required;$('purchase_key').value='';
+ $('purchaseKeyHint').textContent=x.purchase_key_configured?(x.purchase_key_required?'🔐 Key configured and currently REQUIRED. Leave blank to keep it, or enter a new value to rotate it.':'🔓 Key is saved but currently DISABLED. Re-enable Require key to use it again, or enter a new value to rotate it.'):'No purchase key is currently configured.';
+ $('variants_text').value=variantsToText(x);$('digital_inventory').value='';$('image_url').value='';$('image_file').value='';$('active').checked=!!x.active;$('featured').checked=!!x.featured;$('bestseller').checked=!!x.bestseller;$('badge_new').checked=!!x.badge_new;$('otp_enabled').checked=!!x.otp_enabled;$('otp_price').value=x.otp_price||10;
+ $('formTitle').textContent='Edit '+x.name;$('saveBtn').textContent='Save changes';$('editHint').textContent='Blank purchase-key field keeps the current key. Current image and inventory stay unless you add replacements/new stock.';$('currentPreview').classList.remove('hide');$('previewBox').innerHTML=x.image?`<img src="${esc(x.image)}">`:esc(x.emoji||'🔑');$('productMeta').textContent=`${x.fulfillment_mode==='email'?'Email fulfillment':x.fulfillment_mode==='manual'?'Fulfilled by request':x.fulfillment_mode==='login_assist'?'Login assistance':x.stock+' available'} • ${x.sold_count||0} sold`;refreshAccountVariants();updateFulfillmentHelp();loginAssistanceSafetyNote();document.querySelector('#form').scrollIntoView({behavior:'smooth',block:'start'})
+}
+$('variants_text').addEventListener('input',refreshAccountVariants);refreshAccountVariants();
+$('form').onsubmit=async e=>{e.preventDefault();$('activeVal').value=$('active').checked?1:0;$('featuredVal').value=$('featured').checked?1:0;$('bestsellerVal').value=$('bestseller').checked?1:0;$('badgeNewVal').value=$('badge_new').checked?1:0;$('otpEnabledVal').value=$('otp_enabled').checked?1:0;$('purchaseKeyRequiredVal').value=$('purchase_key_required').checked?1:0;let editing=!!$('pid').value;try{await api('/api/admin/product',{method:'POST',body:new FormData($('form'))});alert(editing?'Product updated ✅':'Product created ✅');newProduct();await loadProducts();await loadStats()}catch(e){alert(e.message)}}
+async function deleteProduct(id){if(!confirm('Delete/archive this product?'))return;try{let d=await api('/api/admin/product/'+encodeURIComponent(id),{method:'DELETE'});alert(d.archived?'Product archived because it has order history.':'Product deleted.');await loadProducts();await loadStats()}catch(e){alert(e.message)}}
+function fillInvProducts(){let old=$('invProduct').value;$('invProduct').innerHTML='<option value="">All products</option>'+plist.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');$('invProduct').value=old}
+async function loadInventory(){try{let pid=$('invProduct').value;let data=await api('/api/admin/inventory'+(pid?'?product_id='+encodeURIComponent(pid):''));let available=data.filter(x=>!x.sold).length,sold=data.filter(x=>x.sold).length;$('invSummary').innerHTML=[['Available',available],['Sold',sold],['Total',data.length],['Selected',pid?1:plist.length]].map(x=>`<div class="stat"><div class="muted">${x[0]}</div><b>${x[1]}</b></div>`).join('');let names=Object.fromEntries(plist.map(p=>[p.id,p.name]));$('inventory').innerHTML=data.map(x=>`<div class="inv"><div class="info"><b>${esc(names[x.product_id]||x.product_id)}</b><div class="muted">Variant: ${esc(x.variant_id)} • ${x.sold?'SOLD':'AVAILABLE'} ${x.order_code?'• Order #'+esc(x.order_code):''} ${x.otp_enabled_item?'• 🔐 OTP item':''}</div><div style="margin-top:7px">${x.account&&Object.keys(x.account).length?`
+<div class="helper" style="margin:6px 0">
+${x.account.email?`📧 <b>Email:</b> <code>${esc(x.account.email)}</code><br>`:''}
+${x.account.username?`👤 <b>ID:</b> <code>${esc(x.account.username)}</code><br>`:''}
+${x.account.password?`🔑 <b>Password:</b> <code>${esc(x.account.password)}</code><br>`:''}
+${x.account.profile?`🧑‍💻 <b>Profile:</b> <code>${esc(x.account.profile)}</code><br>`:''}
+${x.account.pin?`🔢 <b>PIN:</b> <code>${esc(x.account.pin)}</code><br>`:''}
+${x.account.totp_secret?`🔐 <b>TOTP Secret:</b> <code>${esc(x.account.totp_secret)}</code>`:''}
+</div>`:`<code style="white-space:pre-wrap;word-break:break-all">${esc(x.plain||'')}</code>`}</div>${x.sold_to?`<div class="muted" style="margin-top:5px">Sold to Telegram ID: ${esc(x.sold_to)}</div>`:''}</div>${x.sold?'':`<button class="danger" onclick="removeInventory('${x.id}')">Remove</button>`}</div>`).join('')||'<p class="muted">No inventory entries.</p>'}catch(e){alert(e.message)}}
+async function removeInventory(id){if(!confirm('Remove this unused inventory item?'))return;try{await api('/api/admin/inventory/'+id,{method:'DELETE'});loadInventory();load()}catch(e){alert(e.message)}}
+let orderPage=1,orderPages=1,orderTotal=0,orderRequest=0,orderSearchTimer=0;
+function orderQuery(){return new URLSearchParams({q:$('orderSearch').value.trim(),status:orderFilter,date_from:$('orderDateFrom').value,date_to:$('orderDateTo').value})}
+function queueOrderSearch(){clearTimeout(orderSearchTimer);orderRequest++;orderSearchTimer=setTimeout(()=>loadOrders(1),300)}
+function clearOrderSearch(){$('orderSearch').value='';$('orderDateFrom').value='';$('orderDateTo').value='';loadOrders(1)}
+async function loadOrders(page=1){
+ clearTimeout(orderSearchTimer);
+ const revision=++orderRequest,query=orderQuery();query.set('page',String(Math.max(1,Math.min(2000,page))));query.set('page_size','50');
+ $('orderPrev').disabled=true;$('orderNext').disabled=true;$('orders').setAttribute('aria-busy','true');$('orderPageInfo').textContent='Searching all orders…';
+ $('orders').innerHTML='<div class="emptyState">Loading orders…</div>';
+ const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),20000);
+ try{
+  const data=await api('/api/admin/orders/search?'+query,{signal:controller.signal});if(revision!==orderRequest)return;
+  if(data.page>data.pages){loadOrders(data.pages);return}
+  olist=data.items;orderPage=data.page;orderPages=data.pages;orderTotal=data.total;
+  orderNoteCache=Object.fromEntries(olist.map(o=>[o.order_code,o.admin_note||'']));renderOrders();
+  $('orderPageInfo').textContent=`Page ${orderPage} of ${orderPages} · ${orderTotal.toLocaleString()} matching orders`;
+  $('orderPrev').disabled=orderPage<=1;$('orderNext').disabled=orderPage>=orderPages||orderPage>=2000;
+ }catch(e){if(revision===orderRequest){$('orders').innerHTML='<div class="emptyState">Could not load orders. <button onclick="loadOrders()">Try again</button></div>';$('orderPageInfo').textContent='Search failed';notify('Could not load orders: '+(e.name==='AbortError'?'Request timed out':e.message))}}
+ finally{clearTimeout(timeout);if(revision===orderRequest)$('orders').setAttribute('aria-busy','false')}
+}
+async function exportOrders(){
+ const button=$('orderExport');button.disabled=true;button.textContent='Preparing export…';
+ const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),30000);
+ try{
+  const response=await fetch('/api/admin/orders/export.csv?'+orderQuery(),{signal:controller.signal});
+  if(response.status===401){location='/admin';return}
+  if(!response.ok){let data=await response.json();throw new Error(typeof data.detail==='string'?data.detail:'Export failed')}
+  const url=URL.createObjectURL(await response.blob()),link=document.createElement('a');link.href=url;link.download='fattle-orders.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+ }catch(e){notify(e.name==='AbortError'?'Export timed out. Try a smaller date range.':e.message)}
+ finally{clearTimeout(timeout);button.disabled=false;button.textContent='↓ Export matching orders'}
+}
+function orderNeedsAction(o){return (o.email_fulfillment||[]).some(x=>x.status!=='fulfilled')||(o.manual_fulfillment||[]).some(x=>x.status!=='fulfilled')}
+function setOrderFilter(value,btn){orderFilter=value;document.querySelectorAll('[data-order-filter]').forEach(x=>{x.classList.toggle('active',x.dataset.orderFilter===value);x.setAttribute('aria-pressed',String(x.dataset.orderFilter===value))});loadOrders(1)}
+function waitText(seconds){seconds=Math.max(0,Number(seconds||0));const h=Math.floor(seconds/3600),m=Math.floor((seconds%3600)/60);if(h>=48)return `${Math.floor(h/24)}d ${h%24}h`;if(h)return `${h}h ${m}m`;return `${m}m`}
+function slaPill(d){if(!d||d.status==='fulfilled')return '';const raw=Number(d.sla_level||0),level=raw>=2?'urgent':raw===1?'warning':'normal',label=level==='urgent'?'URGENT':level==='warning'?'WAITING':'NEW';return `<span class="slaTag ${level}">${label} • ${waitText(d.wait_seconds)}</span>`}
+function orderMaxWait(o){return Math.max(0,...[...(o.manual_fulfillment||[]),...(o.email_fulfillment||[])].filter(x=>x.status!=='fulfilled').map(x=>Number(x.wait_seconds||0)))}
+function renderOrders(){
+ const box=$('orders');if(!box)return;
+ const rows=olist||[];
+ if(!rows.length){box.innerHTML=`<div class="emptyState">${orderFilter==='action'?'No pending orders match these filters.':'No matching orders.'}</div>`;return}
+ box.innerHTML=rows.map(o=>{
+   const pending=orderNeedsAction(o);
+   const emailEntries=(o.email_fulfillment||[]).map((d,i)=>{const expiry=d.expires_at?new Date(d.expires_at).toLocaleString():'Not set';return `<div class="fulfillBox ${d.status!=='fulfilled'?'pending':''}"><b>📧 ${esc(d.name||'Subscription')}</b>${d.status!=='fulfilled'?'<span class="actionTag">NEEDS ACTION</span>'+slaPill(d):''}<div class="muted">Email: ${esc(d.email||'')} • ${Number(d.subscription_days||0)||'custom'} ${d.subscription_days?'days':''} • Expiry: ${esc(expiry)}</div>${d.status!=='fulfilled'?`<button class="good" style="margin-top:8px" onclick="openFulfillment('email','${o.order_code}',${i})">✅ Fulfill email subscription</button>`:'<div class="muted" style="margin-top:6px">✅ Fulfilled</div>'}</div>`}).join('');
+   const manualEntries=(o.manual_fulfillment||[]).map((d,i)=>{const expiry=d.expires_at?new Date(d.expires_at).toLocaleString():'Not set';return `<div class="fulfillBox ${d.status!=='fulfilled'?'pending':''}"><b>🛠 ${esc(d.name||'Requested product')} × ${Number(d.qty||1)}</b>${d.status!=='fulfilled'?'<span class="actionTag">NEEDS ACTION</span>'+slaPill(d):''}<div class="muted">Fulfilled by request • ${Number(d.subscription_days||0)||'no'} ${d.subscription_days?'days':''} • Expiry: ${esc(expiry)}</div>${d.status!=='fulfilled'?`<button class="good" style="margin-top:8px" onclick="openFulfillment('manual','${o.order_code}',${i})">🎁 Prepare & deliver</button>`:'<div class="muted" style="margin-top:6px">✅ Delivered — Resend can send it again.</div>'}</div>`}).join('');
+   const note=o.admin_note?`<div class="privateNote">📝 ${esc(o.admin_note)}</div>`:'';
+   return `<div class="order ${pending?'needsAction':''}"><div class="info"><b>#${esc(o.order_code)}</b>${pending?'<span class="actionTag">PENDING</span>':''}<div class="muted">Customer ${o.user_id} • ${esc(o.created_at?new Date(o.created_at).toLocaleString():'')} • ${money(o.total_credits)} • ${esc(o.status||'delivered')}</div><div style="margin-top:6px">${(o.items||[]).map(i=>`<span class="badge">${esc(i.name||i.id)} ${esc(i.variant_label||'')}</span>`).join('')}</div>${note}${manualEntries}${emailEntries}</div><div class="toolbar"><button onclick="openOrderNote('${o.order_code}')">📝 Note</button><button onclick="resend('${o.order_code}')">♻️ Resend</button></div></div>`
+ }).join('')
+}
+async function openFulfillment(mode,code,index){const o=olist.find(x=>x.order_code===code),d=(mode==='manual'?(o?.manual_fulfillment||[]):(o?.email_fulfillment||[]))[index];if(!d)return notify('Fulfillment item not found.');const name=String(d.name|| (mode==='manual'?'Requested product':'Subscription')),email=String(d.email||''),days=Number(d.subscription_days||0);fulfillContext={o,d,mode,index};$('fulfillMode').value=mode;$('fulfillCode').value=code;$('fulfillIndex').value=index;$('fulfillDelivery').value='';$('fulfillExpiry').value='';$('fulfillTitle').textContent=mode==='manual'?'🎁 Deliver prepared order':'📧 Complete email subscription';$('fulfillSub').textContent=`#${code} • ${name}${email?' • '+email:''}`;$('manualDeliveryFields').style.display=mode==='manual'?'block':'none';$('fulfillExpiryHelp').textContent=days?`Leave blank to use the configured ${days}-day duration.`:'Leave blank if this order has no expiry reminder.';$('fulfillSubmit').textContent=mode==='manual'?'Send delivery':'Mark fulfilled';if(mode==='manual'){await ensureTemplates();fillFulfillmentTemplates(d.product_id||'')}$('fulfillDialog').showModal()}
+function closeFulfillmentDialog(){$('fulfillDialog')?.close()}
+async function submitFulfillment(){const mode=$('fulfillMode').value,code=$('fulfillCode').value,index=Number($('fulfillIndex').value),delivery=$('fulfillDelivery').value.trim(),raw=$('fulfillExpiry').value;let expiry_at='';if(mode==='manual'&&!delivery)return notify('Enter the prepared delivery first.');if(delivery.length>3000)return notify('Delivery is too long (max 3000 characters).');if(raw){const dt=new Date(raw);if(Number.isNaN(dt.getTime()))return notify('Invalid expiry date/time.');expiry_at=dt.toISOString()}const btn=$('fulfillSubmit');btn.disabled=true;try{const url=mode==='manual'?`/api/admin/order/${encodeURIComponent(code)}/fulfill-manual`:`/api/admin/order/${encodeURIComponent(code)}/fulfill-email`;const body=mode==='manual'?{fulfillment_index:index,delivery_text:delivery,expiry_at}:{fulfillment_index:index,expiry_at};const d=await api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});closeFulfillmentDialog();notify(d.reminder_id?'Completed ✅ Reminder scheduled.':'Completed ✅');await Promise.all([loadOrders(),loadReminders(),loadStats()])}catch(e){notify(e.message)}finally{btn.disabled=false}}
+async function fulfillManual(code,index){openFulfillment('manual',code,index)}
+async function fulfillEmail(code,index){openFulfillment('email',code,index)}
+async function resend(code){if(!confirm('Resend receipt and current fulfillment status for #'+code+'?'))return;try{let d=await api('/api/admin/order/'+encodeURIComponent(code)+'/resend',{method:'POST'});alert(d.message);loadOrders()}catch(e){alert(e.message)}}
+
+function fillReminderProducts(){
+ const sel=$('reminderProduct');if(!sel)return;const old=sel.value;
+ sel.innerHTML='<option value="">Non-listed / custom item</option>'+plist.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');
+ if([...sel.options].some(o=>o.value===old))sel.value=old
+}
+function toLocalInput(value){
+ if(!value)return '';const d=new Date(value);if(Number.isNaN(d.getTime()))return '';
+ const off=d.getTimezoneOffset()*60000;return new Date(d.getTime()-off).toISOString().slice(0,16)
+}
+function reminderProductChanged(){
+ const p=plist.find(x=>x.id===$('reminderProduct').value);if(p&&!$('reminderTitle').value.trim())$('reminderTitle').value=p.name||''
+}
+function newReminder(){
+ $('reminderId').value='';$('reminderTitle').value='';$('reminderProduct').value='';$('reminderExpiry').value='';$('reminderUserId').value='';$('reminderEmail').value='';$('reminderMessage').value='';$('reminderFormTitle').textContent='Add manual reminder'
+}
+async function loadReminders(){
+ try{
+   remindersData=await api('/api/admin/reminders');
+   const now=Date.now();
+   $('remindersList').innerHTML=remindersData.map(r=>{
+     const expiry=new Date(r.expires_at);const due=expiry.getTime()<now;const status=r.status||'pending';
+     return `<div class="order"><div class="info"><b>${esc(r.title||r.product_name||'Subscription')}</b><div class="muted">${r.source==='order'?'🧾 Order '+esc(r.order_code||''):'✍️ Manual'} • Expires ${esc(expiry.toLocaleString())} • ${status}${due?' • EXPIRED':''}</div>${r.email?`<div>📧 <code>${esc(r.email)}</code></div>`:''}${r.user_id?`<div class="muted">Customer ID ${esc(r.user_id)}</div>`:''}${r.custom_message?`<div class="helper" style="margin:6px 0">${esc(r.custom_message)}</div>`:''}</div><div><button onclick="editReminder('${r.reminder_id}')">Edit</button> <button class="danger" onclick="cancelReminder('${r.reminder_id}')">Cancel</button></div></div>`
+   }).join('')||'<div class="emptyState">No active reminders. Add one for a non-listed subscription or sell a configured subscription product.</div>'
+ }catch(e){alert(e.message)}
+}
+function editReminder(id){
+ const r=remindersData.find(x=>x.reminder_id===id);if(!r)return;
+ $('reminderId').value=r.reminder_id;$('reminderTitle').value=r.title||r.product_name||'';$('reminderProduct').value=r.product_id||'';$('reminderExpiry').value=toLocalInput(r.expires_at);$('reminderUserId').value=r.user_id||'';$('reminderEmail').value=r.email||'';$('reminderMessage').value=r.custom_message||'';$('reminderFormTitle').textContent='Edit reminder';document.querySelector('#remindersView .stickyEditor')?.scrollIntoView({behavior:'smooth',block:'start'})
+}
+async function saveReminder(){
+ const title=$('reminderTitle').value.trim(),raw=$('reminderExpiry').value;if(!title)return alert('Reminder title is required.');if(!raw)return alert('Expiry date/time is required.');
+ const expiry=new Date(raw);if(Number.isNaN(expiry.getTime()))return alert('Invalid expiry date/time.');
+ const payload={reminder_id:$('reminderId').value.trim(),title,product_id:$('reminderProduct').value,expires_at:expiry.toISOString(),user_id:$('reminderUserId').value.trim(),email:$('reminderEmail').value.trim(),custom_message:$('reminderMessage').value.trim()};
+ try{await api('/api/admin/reminder',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});alert('Reminder saved ✅');newReminder();await loadReminders()}catch(e){alert(e.message)}
+}
+async function cancelReminder(id){if(!confirm('Cancel this reminder?'))return;try{await api('/api/admin/reminder/'+encodeURIComponent(id),{method:'DELETE'});await loadReminders()}catch(e){alert(e.message)}}
+async function processReminders(){try{const d=await api('/api/admin/reminders/process',{method:'POST'});alert(`Reminder check complete. Sent: ${d.sent}, failed: ${d.failed}`);await loadReminders()}catch(e){alert(e.message)}}
+
+function renderCustomers(){let q=($('customerSearch').value||'').toLowerCase();let rows=clist.filter(x=>`${x.user_id} ${x.full_name||''} ${x.username||''}`.toLowerCase().includes(q));$('customers').innerHTML=rows.map(x=>`<div class="customer"><div class="info"><b>${esc(x.full_name||'Customer')}</b><div class="muted">@${esc(x.username||'-')} • ID ${x.user_id}<br>${money(x.credits)} • ${x.total_orders||0} orders • spent ${money(x.total_spent||0)}</div></div><button onclick="profile(${x.user_id})">View</button></div>`).join('')}
+async function profile(uid){try{let d=await api('/api/admin/customer/'+uid),u=d.user||{};(d.orders||[]).forEach(o=>orderNoteCache[o.order_code]=o.admin_note||'');const pb=!!u.purchase_blocked,mb=!!u.methods_blocked,sus=!!u.suspended,note=String(u.admin_note||'');$('profile').innerHTML=`<h2>${esc(u.full_name||'Customer')}</h2><div class="helper">ID <code>${uid}</code><br>Balance: <b>${money(u.credits)}</b><br>Total orders: <b>${d.total_orders}</b><br>Total spent: <b>${money(d.total_spent)}</b></div><div class="restrictionGrid"><button class="${pb?'on':''}" onclick="toggleRestriction(${uid},'purchase_blocked',${!pb})">${pb?'✅ Allow product purchases':'🚫 Block product purchases'}</button><button class="${mb?'on':''}" onclick="toggleRestriction(${uid},'methods_blocked',${!mb})">${mb?'✅ Allow Methods':'🚫 Block Methods'}</button><button class="${sus?'on danger':''}" onclick="toggleRestriction(${uid},'suspended',${!sus})">${sus?'✅ Unsuspend':'⛔ Suspend purchases'}</button></div>${note?`<div class="privateNote">📝 ${esc(note)}</div>`:'<div class="muted">No private customer note.</div>'}<button style="margin:8px 0 12px" onclick="editCustomerNote(${uid})">📝 Edit private note</button><label>Adjust credits</label><div class="row2"><input id="profileCredit" type="number" placeholder="Amount"><div class="toolbar"><button class="good" onclick="profileCredit(${uid},'add')">＋ Add</button><button onclick="profileCredit(${uid},'subtract')">− Subtract</button><button onclick="profileCredit(${uid},'set')">Set exact</button></div></div><h3>Purchase history</h3>${d.orders.map(o=>`<div class="order"><div class="info"><b>#${esc(o.order_code)}</b><div class="muted">${money(o.total_credits)}</div>${o.admin_note?`<div class="privateNote">📝 ${esc(o.admin_note)}</div>`:''}</div><div class="toolbar"><button onclick="openOrderNote('${o.order_code}')">📝</button><button onclick="resend('${o.order_code}')">Resend</button></div></div>`).join('')||'<div class="muted">No orders</div>'}`}catch(e){alert(e.message)}}
+async function profileCredit(uid,mode){let amount=Number($('profileCredit').value);if(!Number.isFinite(amount)||amount<0)return notify('Enter a positive credit amount.');let apiMode=mode;if(mode==='subtract'){amount=-amount;apiMode='add'}try{await api('/api/admin/customer-credit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:uid,amount,mode:apiMode})});notify('Balance updated ✅');await load();await profile(uid)}catch(e){notify(e.message)}}
+async function toggleRestriction(uid,field,value){try{await api('/api/admin/customer-restrictions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:uid,field,value})});notify('Restriction updated ✅');await Promise.all([profile(uid),loadCustomers()])}catch(e){notify(e.message)}}
+function openNoteDialog(target,key,note=''){$('noteTarget').value=target;$('noteKey').value=key;$('noteText').value=String(note||'');$('noteTitle').textContent=target==='customer'?'📝 Customer private note':'📝 Order private note';$('noteDialog').showModal()}
+function openOrderNote(code){openNoteDialog('order',code,orderNoteCache[code]||'')}
+async function editCustomerNote(uid){try{const d=await api('/api/admin/customer/'+uid);openNoteDialog('customer',uid,d.user?.admin_note||'')}catch(e){notify(e.message)}}
+function closeNoteDialog(){$('noteDialog')?.close()}
+async function saveInternalNote(){const target=$('noteTarget').value,key=$('noteKey').value,note=$('noteText').value.trim(),body={target,note};if(target==='customer')body.user_id=Number(key);else body.order_code=key;try{await api('/api/admin/internal-note',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});closeNoteDialog();notify('Private note saved ✅');if(target==='customer')await profile(Number(key));else{orderNoteCache[key]=note;await loadOrders()}}catch(e){notify(e.message)}}
+async function runSlaCheck(){try{const d=await api('/api/admin/fulfillment-escalations/process',{method:'POST'});notify(`SLA check complete • ${Number(d.sent||0)} alert(s) sent`);await Promise.all([loadOrders(),loadStats()])}catch(e){notify(e.message)}}
+
+function fillTemplateProducts(){const sel=$('templateProduct');if(!sel)return;const old=sel.value;sel.innerHTML='<option value="">All products</option>'+plist.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');if([...sel.options].some(o=>o.value===old))sel.value=old}
+async function loadTemplates(){try{templatesData=await api('/api/admin/fulfillment-templates');renderTemplates();fillTemplateProducts()}catch(e){notify('Could not load templates: '+e.message)}}
+async function ensureTemplates(){if(!templatesData.length)await loadTemplates()}
+function renderTemplates(){const box=$('templatesList');if(!box)return;box.innerHTML=(templatesData||[]).map(t=>{const p=plist.find(x=>x.id===t.product_id);return `<div class="templateCard"><div class="top"><div><b>${esc(t.name)}</b><div class="muted">${p?'Product: '+esc(p.name):'Global'} • ${t.active?'Active':'Disabled'}</div></div><div class="toolbar"><button onclick="editTemplate('${t.id}')">Edit</button><button class="danger" onclick="deleteTemplate('${t.id}')">Delete</button></div></div><div class="privateNote"><pre style="white-space:pre-wrap;margin:0;font-family:inherit">${esc((t.body||'').slice(0,500))}</pre></div></div>`}).join('')||'<div class="emptyState">No templates yet.</div>'}
+function newTemplate(){$('templateId').value='';$('templateName').value='';$('templateProduct').value='';$('templateBody').value='';$('templateActive').checked=true;$('templateFormTitle').textContent='Add template'}
+function editTemplate(id){const t=templatesData.find(x=>x.id===id);if(!t)return;$('templateId').value=t.id;$('templateName').value=t.name||'';$('templateProduct').value=t.product_id||'';$('templateBody').value=t.body||'';$('templateActive').checked=!!t.active;$('templateFormTitle').textContent='Edit '+(t.name||'template');document.querySelector('#templatesView .stickyEditor')?.scrollIntoView({behavior:'smooth',block:'start'})}
+async function saveTemplate(){const id=$('templateId').value,name=$('templateName').value.trim(),product_id=$('templateProduct').value,body=$('templateBody').value.trim(),active=$('templateActive').checked;if(!name||!body)return notify('Template name and body are required.');try{await api('/api/admin/fulfillment-template',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,name,product_id,body,active})});notify('Template saved ✅');newTemplate();await loadTemplates()}catch(e){notify(e.message)}}
+async function deleteTemplate(id){if(!confirm('Delete this delivery template?'))return;try{await api('/api/admin/fulfillment-template/'+encodeURIComponent(id),{method:'DELETE'});notify('Template deleted');await loadTemplates()}catch(e){notify(e.message)}}
+function fillFulfillmentTemplates(productId){const sel=$('fulfillTemplate');if(!sel)return;const rows=(templatesData||[]).filter(t=>t.active&&(!t.product_id||t.product_id===productId));sel.innerHTML='<option value="">Write manually</option>'+rows.map(t=>`<option value="${esc(t.id)}">${esc(t.name)}${t.product_id?'':' • global'}</option>`).join('')}
+function applyFulfillmentTemplate(){const id=$('fulfillTemplate').value,t=templatesData.find(x=>x.id===id);if(!t||!fulfillContext)return;if($('fulfillDelivery').value.trim()&&!confirm('Replace the current delivery text with this template?')){$('fulfillTemplate').value='';return}const {o,d}=fulfillContext;const vars={order_code:o.order_code||'',customer_id:o.user_id||'',product:d.name||d.product_id||'',variant:d.variant_label||'',email:d.email||'',qty:d.qty||1};let text=String(t.body||'');Object.entries(vars).forEach(([k,v])=>text=text.split('{{'+k+'}}').join(String(v??'')));$('fulfillDelivery').value=text.slice(0,3000)}
+
+async function loadBackupStatus(){try{backupData=await api('/api/admin/backup-status');$('backupSchedule').value=backupData.schedule||'off';const last=backupData.last_sent_at?new Date(backupData.last_sent_at).toLocaleString():'Never';$('backupStatus').innerHTML=`Schedule: <b>${esc((backupData.schedule||'off').toUpperCase())}</b><br>Last Telegram backup: <b>${esc(last)}</b><br>Last size: <b>${(Number(backupData.last_size||0)/(1024*1024)).toFixed(2)} MB</b><br>SLA alerts: <b>${Number(backupData.sla_warning_hours||0)}h warning / ${Number(backupData.sla_urgent_hours||0)}h urgent</b>`}catch(e){notify(e.message)}}
+async function saveBackupSchedule(){try{const d=await api('/api/admin/backup-settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({schedule:$('backupSchedule').value})});notify('Backup schedule saved ✅');await loadBackupStatus()}catch(e){notify(e.message)}}
+async function sendBackupTelegram(){if(!confirm('Generate a core database backup and send it to your admin Telegram now?'))return;try{notify('Building backup…');const d=await api('/api/admin/backup/send-telegram',{method:'POST'});notify(`Backup sent ✅ ${(Number(d.bytes||0)/(1024*1024)).toFixed(2)} MB`);await loadBackupStatus()}catch(e){notify(e.message)}}
+
+async function loadAnalytics(){try{let a=await api('/api/admin/analytics');$('analytics').innerHTML=`<div class="analytics"><div class="stat"><div class="muted">Today</div><div class="big">${money(a.today.revenue)}</div><div>${a.today.orders} orders • AOV ${a.today.aov}</div></div><div class="stat"><div class="muted">7 days</div><div class="big">${money(a.week.revenue)}</div><div>${a.week.orders} orders • AOV ${a.week.aov}</div></div><div class="stat"><div class="muted">30 days</div><div class="big">${money(a.month.revenue)}</div><div>${a.month.orders} orders • AOV ${a.month.aov}</div></div></div><h3>Best sellers</h3>${a.best.map(x=>`<div class="order"><div class="info"><b>${esc(x.name)}</b></div><b>${x.qty} sold</b></div>`).join('')||'<div class="muted">No sales yet.</div>'}`}catch(e){alert(e.message)}}
+
+async function loadMethods(){
+  try{
+    methodsData=await api('/api/admin/methods');
+    $('methodsList').innerHTML=methodsData.map(m=>`<div class="product">
+      <div class="thumb">${m.image?`<img src="${esc(m.image)}">`:'📘'}</div>
+      <div class="info"><b>${esc(m.title)}</b><div class="muted">${m.is_free||!m.price?'FREE':Number(m.price).toLocaleString()+' credits'} • Buyers ${m.buyers||0} • Images ${(m.image?1:0)+(Array.isArray(m.gallery)?m.gallery.length:0)} • Sort ${m.sort_order||0} ${m.active?'':'• HIDDEN'}</div><div class="muted">${esc((m.summary||m.body||'').slice(0,120))}</div></div>
+      <div><button onclick="editMethod('${m.id}')">Edit</button> <button class="danger" onclick="deleteMethod('${m.id}')">Delete</button></div>
+    </div>`).join('')||'<p class="muted">No methods yet.</p>';
+  }catch(e){alert(e.message)}
+}
+function renderMethodGalleryAdmin(method){
+  const box=$('methodGalleryPreview'),gallery=Array.isArray(method?.gallery)?method.gallery:[];
+  if(!gallery.length){box.className='methodGalleryEmpty';box.innerHTML='No gallery images.';return}
+  box.className='methodGalleryAdmin';
+  box.innerHTML=gallery.map(img=>`<div class="methodGalleryItem"><img src="${esc(img)}" loading="lazy"><button type="button" title="Remove image" onclick="removeMethodGalleryImage('${esc(method.id)}','${encodeURIComponent(String(img)).replace(/'/g,'%27')}')">✕</button></div>`).join('');
+}
+async function removeMethodGalleryImage(id,encoded){
+  const image=decodeURIComponent(encoded);if(!confirm('Remove this Method gallery image?'))return;
+  try{await api('/api/admin/method/'+encodeURIComponent(id)+'/gallery/remove',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image})});notify('Gallery image removed ✅');await loadMethods();const fresh=methodsData.find(x=>x.id===id);if(fresh)editMethod(id)}catch(e){notify(e.message)}
+}
+function newMethod(){
+  $('methodForm').reset();$('methodId').value='';$('methodSort').value=0;$('methodPrice').value=0;$('methodFree').checked=false;$('methodActive').checked=true;
+  $('methodFormTitle').textContent='Add method';$('methodSaveBtn').textContent='Save method';
+  $('methodImageUrl').value='';$('methodImageFile').value='';$('methodGalleryUrls').value='';$('methodGalleryFiles').value='';$('methodPreview').classList.add('hide');renderMethodGalleryAdmin(null)
+}
+function editMethod(id){
+  const m=methodsData.find(x=>x.id===id);if(!m)return;
+  $('methodId').value=m.id;$('methodTitle').value=m.title||'';$('methodSummary').value=m.summary||'';$('methodBody').value=m.body||'';$('methodPrice').value=m.price||0;$('methodFree').checked=!!m.is_free;
+  $('methodSort').value=m.sort_order||0;$('methodActive').checked=!!m.active;
+  $('methodImageUrl').value='';$('methodImageFile').value='';$('methodGalleryUrls').value='';$('methodGalleryFiles').value='';
+  $('methodFormTitle').textContent='Edit '+(m.title||'method');$('methodSaveBtn').textContent='Save changes';
+  if(m.image){$('methodPreview').classList.remove('hide');$('methodPreviewBox').innerHTML=`<img src="${esc(m.image)}">`}else{$('methodPreview').classList.add('hide')}renderMethodGalleryAdmin(m)
+  $('methodForm').scrollIntoView({behavior:'smooth',block:'start'})
+}
+$('methodForm').onsubmit=async e=>{
+  e.preventDefault();$('methodActiveVal').value=$('methodActive').checked?1:0;$('methodFreeVal').value=$('methodFree').checked?1:0;
+  try{await api('/api/admin/method',{method:'POST',body:new FormData($('methodForm'))});alert('Method saved ✅');newMethod();loadMethods()}catch(e){alert(e.message)}
+}
+async function deleteMethod(id){if(!confirm('Delete this method?'))return;try{await api('/api/admin/method/'+encodeURIComponent(id),{method:'DELETE'});loadMethods()}catch(e){alert(e.message)}}
+
+
+async function loadBroadcastStats(){
+  try{
+    const d=await api('/api/admin/broadcast/stats');
+    $('broadcastStats').innerHTML=[
+      ['Eligible',d.eligible],['Opted out',d.opted_out],['Unavailable',d.blocked]
+    ].map(x=>`<div class="stat"><div class="muted">${x[0]}</div><b>${Number(x[1]||0).toLocaleString()}</b></div>`).join('');
+    $('broadcastHistory').innerHTML=(d.recent||[]).map(x=>`<div class="order">
+      <div class="info"><b>📣 ${esc(x.preview||'Broadcast')}</b>
+      <div class="muted">${esc(x.status||'')} • sent ${Number(x.sent||0).toLocaleString()} • failed ${Number(x.failed||0).toLocaleString()}</div></div>
+    </div>`).join('')||'<p class="muted">No broadcasts yet.</p>';
+  }catch(e){alert(e.message)}
+}
+async function startBroadcast(){
+  const message=$('broadcastMessage').value.trim();
+  const image_url=$('broadcastImage').value.trim();
+  const button_text=$('broadcastButtonText').value.trim();
+  const button_url=$('broadcastButtonUrl').value.trim();
+  if(!message)return alert('Write a message first.');
+  if(!confirm('Send this broadcast to all eligible customers?'))return;
+
+  const btn=$('broadcastSendBtn');
+  const progress=$('broadcastProgress');
+  btn.disabled=true;
+  progress.classList.remove('hide');
+  let cursor=0,broadcast_id='',sent=0,failed=0,batches=0;
+  try{
+    while(true){
+      progress.textContent=`Sending… ${sent.toLocaleString()} delivered, ${failed.toLocaleString()} failed`;
+      const d=await api('/api/admin/broadcast/send',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({message,image_url,button_text,button_url,cursor,broadcast_id})
+      });
+      broadcast_id=d.broadcast_id;
+      cursor=d.next_cursor||cursor;
+      sent+=Number(d.sent||0);
+      failed+=Number(d.failed||0);
+      batches++;
+      if(d.done)break;
+      if(batches>500)throw Error('Broadcast safety stop reached.');
+    }
+    progress.textContent=`✅ Broadcast complete — ${sent.toLocaleString()} delivered, ${failed.toLocaleString()} failed`;
+    $('broadcastMessage').value='';
+    $('broadcastImage').value='';
+    $('broadcastButtonText').value='';
+    $('broadcastButtonUrl').value='';
+    await loadBroadcastStats();
+  }catch(e){
+    progress.textContent='❌ '+e.message;
+  }finally{
+    btn.disabled=false;
+  }
+}
+
+function renderSecurity(){$('security').innerHTML=`<div class="stat"><div class="muted">Inventory encryption</div><b>${statsData.encryption==='environment'?'✅ Dedicated key':'🟠 Derived key'}</b></div><div class="stat"><div class="muted">Admin 2FA</div><b>${statsData.two_factor?'✅ Enabled':'⚪ Optional'}</b></div><div class="stat"><div class="muted">Cloudinary</div><b>${statsData.cloudinary?'✅ Enabled':'⚪ Mongo fallback'}</b></div>`}
+async function setupWebhook(){try{let d=await api('/admin/setup-webhook',{method:'POST'});alert('Telegram webhook connected!\n'+d.webhook_url)}catch(e){alert(e.message)}}
+(async()=>{
+  try{
+    await load();
+  }catch(e){
+    console.error('Admin initial load failed:',e);
+    alert('Admin data load error: '+e.message);
+  }
+  const key=(location.hash||'#dashboard').slice(1);
+  const map={dashboard:'dashboardView',products:'productsView',methods:'methodsView',inventory:'inventoryView',orders:'ordersView',reminders:'remindersView',customers:'customersView',analytics:'analyticsView',broadcast:'broadcastView',templates:'templatesView',backups:'backupsView',security:'securityView'};
+  openView(map[key]||'dashboardView');
+})();
+</script></body></html>
