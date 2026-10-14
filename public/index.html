@@ -1,0 +1,374 @@
+<!doctype html>
+<html><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fattle Shop</title>
+<link rel="preconnect" href="https://telegram.org" crossorigin>
+<link rel="dns-prefetch" href="//telegram.org">
+<style>
+:root{
+  --bg:#05060a;--bg2:#090b12;--panel:#0d111a;--panel2:#121824;--panel3:#18202e;
+  --text:#f7f9ff;--muted:#8f9aab;--soft:#cbd4e2;--accent:#8b5cf6;--accent2:#22d3ee;
+  --accent3:#5eead4;--danger:#fb7185;--success:#4ade80;--warning:#fbbf24;
+  --line:rgba(255,255,255,.085);--line2:rgba(139,92,246,.22);--shadow:0 18px 60px rgba(0,0,0,.42);
+  --glow:0 0 0 1px rgba(255,255,255,.03),0 18px 44px rgba(0,0,0,.24)
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{color-scheme:dark;scroll-behavior:smooth}
+body{margin:0;min-height:100%;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:10px 10px calc(100px + env(safe-area-inset-bottom));overflow-x:hidden;background:
+  radial-gradient(850px 440px at -12% -8%,rgba(139,92,246,.24),transparent 58%),
+  radial-gradient(650px 360px at 112% 4%,rgba(34,211,238,.12),transparent 56%),
+  radial-gradient(520px 380px at 55% 115%,rgba(94,234,212,.07),transparent 55%),
+  linear-gradient(180deg,#05060a 0%,#070912 44%,#05070c 100%)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:32px 32px;mask-image:linear-gradient(to bottom,black,transparent 78%)}
+body:after{content:"";position:fixed;pointer-events:none;width:220px;height:220px;border-radius:50%;right:-110px;top:34%;background:rgba(139,92,246,.055);filter:blur(2px)}
+button,input,select{font:inherit}.wrap{max-width:980px;margin:auto;position:relative;z-index:1}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:3px 1px 8px}.brandblock{min-width:0}.brand{font-size:24px;font-weight:950;letter-spacing:-.045em;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.brand:before{content:"F";font-size:12px;display:inline-grid;place-items:center;width:27px;height:27px;margin-right:8px;border-radius:9px;background:linear-gradient(135deg,#a78bfa 0%,#7c3aed 48%,#22d3ee 120%);vertical-align:4px;color:#fff;box-shadow:0 8px 22px rgba(124,58,237,.34),inset 0 1px rgba(255,255,255,.38)}
+.top-actions{display:flex;gap:6px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.pill{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(139,92,246,.22),rgba(34,211,238,.08));border:1px solid rgba(167,139,250,.24);padding:8px 11px;border-radius:13px;font-size:11px;font-weight:900;box-shadow:inset 0 1px rgba(255,255,255,.08),0 8px 24px rgba(0,0,0,.12)}.pill:before{content:"◆";font-size:7px;color:#c4b5fd;margin-right:5px}
+.muted{color:var(--muted);font-size:10.5px}.total{font-weight:950;font-size:17px;letter-spacing:-.03em}
+.hero{position:relative;isolation:isolate;overflow:hidden;margin:8px 0 11px;border:1px solid rgba(167,139,250,.18);border-radius:22px;padding:17px 17px 16px;background:
+  linear-gradient(128deg,rgba(24,18,48,.98),rgba(14,24,40,.96) 58%,rgba(8,32,36,.94));box-shadow:0 18px 54px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.055)}
+.hero:before{content:"";position:absolute;width:230px;height:230px;border-radius:50%;right:-72px;top:-118px;background:radial-gradient(circle,rgba(139,92,246,.42),rgba(139,92,246,.08) 45%,transparent 68%);z-index:-1}.hero:after{content:"";position:absolute;width:145px;height:145px;right:35px;bottom:-92px;border-radius:50%;border:1px solid rgba(34,211,238,.17);box-shadow:0 0 0 18px rgba(34,211,238,.025),0 0 0 42px rgba(34,211,238,.014);z-index:-1}
+.hero h1{font-size:25px;line-height:1.05;letter-spacing:-.045em;margin:0 0 6px;max-width:650px;background:linear-gradient(90deg,#fff 0%,#e9e7ff 70%,#b9f7ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{margin:0;max-width:650px;font-size:11.5px;line-height:1.52;color:#aeb7c6}
+.sectionnav{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:5px 0 9px;padding:4px;border:1px solid var(--line);background:rgba(9,12,18,.72);backdrop-filter:blur(18px);border-radius:15px;box-shadow:inset 0 1px rgba(255,255,255,.03)}.sectionbtn{position:relative;border:0;background:transparent;color:#7f8998;padding:9px 11px;border-radius:11px;font-weight:900;font-size:13px;transition:.18s ease}.sectionbtn.active{background:linear-gradient(135deg,rgba(139,92,246,.9),rgba(91,70,210,.88));color:#fff;box-shadow:0 8px 22px rgba(91,70,210,.24),inset 0 1px rgba(255,255,255,.19)}
+.sectionpanel{display:none}.sectionpanel.active{display:block;animation:panelIn .18s ease}.toolbar{position:sticky;top:0;z-index:5;padding:6px 0 8px;background:linear-gradient(180deg,rgba(5,6,10,.98) 0%,rgba(5,6,10,.89) 72%,transparent 100%);backdrop-filter:blur(12px)}.toolbar-main{display:flex;gap:7px}.categoryrail{display:flex;gap:6px;overflow:auto;padding:6px 1px 1px;scrollbar-width:none}.categoryrail::-webkit-scrollbar{display:none}
+.search{flex:1;min-width:0;border:1px solid var(--line);background:rgba(12,16,24,.91);color:white;padding:10px 12px 10px 36px;border-radius:13px;outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='%238f9aab' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:11px center;transition:.18s ease;box-shadow:inset 0 1px rgba(255,255,255,.025)}.search:focus{border-color:rgba(139,92,246,.62);box-shadow:0 0 0 3px rgba(139,92,246,.12),0 10px 30px rgba(0,0,0,.12);background-color:#0d121d}.search::placeholder{color:#657083}
+.cat{border:1px solid var(--line);background:rgba(13,17,25,.88);color:#b5bfcd;padding:8px 10px;border-radius:11px;white-space:nowrap;font-weight:800;transition:.16s ease;box-shadow:inset 0 1px rgba(255,255,255,.025)}.cat:active,.sectionbtn:active,.add:active,.buy:active,.full:active{transform:scale(.975)}.cat.active{background:linear-gradient(135deg,rgba(139,92,246,.92),rgba(91,70,210,.88));color:#fff;border-color:rgba(167,139,250,.28);box-shadow:0 7px 18px rgba(88,54,190,.18)}
+.grid,.methodgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card,.methodcard{background:linear-gradient(180deg,rgba(18,23,34,.96),rgba(9,13,20,.98));border:1px solid rgba(255,255,255,.075);border-radius:20px;padding:8px;position:relative;overflow:hidden;box-shadow:var(--glow);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;content-visibility:auto;contain-intrinsic-size:315px}.card:before,.methodcard:before{content:"";position:absolute;left:14px;right:14px;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,.35),rgba(34,211,238,.22),transparent);pointer-events:none}.card:after,.methodcard:after{content:"";position:absolute;width:92px;height:92px;border-radius:50%;right:-48px;bottom:-48px;background:rgba(139,92,246,.04);pointer-events:none}
+.pic,.methodimg{height:158px;border-radius:15px;background:linear-gradient(145deg,#151c2a,#090d14);display:grid;place-items:center;font-size:46px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,.045)}.pic:after,.methodimg:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(4,6,10,.33),transparent 42%)}.pic img,.methodimg img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.badges{position:absolute;top:13px;left:13px;display:flex;gap:4px;z-index:2;flex-wrap:wrap;max-width:74%}.badge{background:rgba(5,8,13,.77);border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(12px);padding:4px 6px;border-radius:7px;font-size:7.5px;font-weight:900;letter-spacing:.03em;box-shadow:0 5px 16px rgba(0,0,0,.2);text-transform:uppercase}.fav{position:absolute;right:13px;top:13px;z-index:3;width:34px;height:34px;border-radius:11px;border:1px solid rgba(255,255,255,.14);background:rgba(5,8,13,.74);backdrop-filter:blur(12px);color:white;font-size:15px;display:grid;place-items:center;transition:.16s ease}.fav.on{background:linear-gradient(135deg,#fb7185,#e11d48);border-color:transparent;box-shadow:0 8px 24px rgba(225,29,72,.27)}
+.name{font-weight:930;font-size:15px;line-height:1.24;margin-top:9px;letter-spacing:-.025em;color:#f7f8fd}.desc{font-size:10.5px;line-height:1.45;color:#8792a4;min-height:30px;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.variant{width:100%;margin:8px 0 0;border:1px solid rgba(255,255,255,.07);background:#0b1018;color:#e9edf4;padding:8px 29px 8px 8px;border-radius:10px;outline:none}.variant:focus{border-color:rgba(139,92,246,.55);box-shadow:0 0 0 3px rgba(139,92,246,.09)}.variantSummary{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.vchip{font-size:8.5px;padding:4px 6px;border-radius:999px;border:1px solid var(--line);background:#0e141e;color:#9da8b8;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.vchip.ok{background:rgba(74,222,128,.08);color:#9bf0b6;border-color:rgba(74,222,128,.15)}.vchip.out{opacity:.48;text-decoration:line-through}
+.meta{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;margin-top:9px;padding-top:9px;border-top:1px solid rgba(255,255,255,.055)}.price{font-weight:950;font-size:16px;letter-spacing:-.03em;background:linear-gradient(90deg,#fff,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}.stock{font-size:9.5px;color:#7d899b;margin-top:2px}.add{border:1px solid rgba(167,139,250,.2);background:linear-gradient(135deg,#8b5cf6,#6d4fe5 60%,#4f46e5);color:#fff;font-weight:920;padding:8px 11px;border-radius:10px;min-width:66px;box-shadow:0 8px 20px rgba(96,64,210,.2),inset 0 1px rgba(255,255,255,.16);transition:.15s ease}.add:disabled{opacity:.32;box-shadow:none;filter:saturate(.5)}
+.dock{position:fixed;left:9px;right:9px;bottom:calc(8px + env(safe-area-inset-bottom));max-width:940px;margin:auto;background:linear-gradient(135deg,rgba(13,17,26,.95),rgba(9,13,20,.93));border:1px solid rgba(167,139,250,.16);backdrop-filter:blur(24px) saturate(1.2);border-radius:19px;padding:7px 7px 7px 11px;display:flex;align-items:center;gap:10px;box-shadow:0 20px 58px rgba(0,0,0,.56),inset 0 1px rgba(255,255,255,.05);z-index:8}.dock:before{content:"";position:absolute;left:22px;right:22px;top:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,.38),rgba(34,211,238,.28),transparent)}.cartinfo{flex:1;min-width:0;padding:2px 0;cursor:pointer}.cartinfo .muted:before{content:"🛒";margin-right:5px}.buy{border:1px solid rgba(167,139,250,.25);background:linear-gradient(135deg,#8b5cf6,#6d4fe5 55%,#4338ca);color:white;padding:11px 15px;border-radius:12px;font-weight:950;box-shadow:0 9px 25px rgba(91,70,210,.32),inset 0 1px rgba(255,255,255,.15);white-space:nowrap;transition:.15s ease}.buy:disabled{opacity:.34;box-shadow:none}
+.sheet{display:none;position:fixed;inset:0;background:rgba(1,2,5,.72);z-index:12;align-items:flex-end;backdrop-filter:blur(8px)}.sheet.open{display:flex;animation:fadeIn .15s ease}.box{width:100%;max-width:940px;margin:auto;background:linear-gradient(180deg,#111722,#090d14);border:1px solid rgba(167,139,250,.13);border-bottom:0;border-radius:24px 24px 0 0;padding:10px 14px calc(16px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto;box-shadow:0 -24px 72px rgba(0,0,0,.55);animation:sheetUp .2s ease}.sheet-handle{width:42px;height:4px;border-radius:999px;background:linear-gradient(90deg,#7c3aed,#22d3ee);opacity:.72;margin:2px auto 11px}.sheet-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.sheet-head h2{font-size:19px;letter-spacing:-.035em;margin:4px 0 8px}
+.row{display:flex;gap:9px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.cart-thumb{width:44px;height:44px;border-radius:11px;background:#121927;overflow:hidden;display:grid;place-items:center;font-size:22px;flex:0 0 auto;border:1px solid rgba(255,255,255,.05)}.cart-thumb img{width:100%;height:100%;object-fit:cover}.ri{flex:1;min-width:0}.ri b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.qty{display:flex;gap:5px;align-items:center}.qty button{width:29px;height:29px;border:1px solid var(--line);border-radius:9px;background:#141c28;color:white;font-weight:900}.qty button:disabled{opacity:.32}.confirm,.reqgroup{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.025));border:1px solid var(--line);border-radius:14px;padding:11px;margin-top:10px}.reqgroup{background:#090e15}.reqgroup label{display:block;font-size:11px;font-weight:900;margin:8px 0 4px}.reqinput{width:100%;border:1px solid var(--line);background:#0a1018;color:white;padding:10px 11px;border-radius:10px;outline:none}.reqinput:focus{border-color:rgba(139,92,246,.58);box-shadow:0 0 0 3px rgba(139,92,246,.1)}.reqnote{font-size:11px;line-height:1.45;color:var(--muted);margin-top:5px}.full{width:100%;padding:12px;border:1px solid rgba(167,139,250,.24);border-radius:12px;font-weight:950;background:linear-gradient(135deg,#8b5cf6,#6d4fe5 55%,#4338ca);color:white;margin-top:12px;box-shadow:0 10px 28px rgba(91,70,210,.27),inset 0 1px rgba(255,255,255,.14)}.full:disabled{opacity:.5}
+.methodcard{padding:8px}.methodimg{height:158px}.methodbody{white-space:pre-wrap;line-height:1.6;color:#d6deea;font-size:13px;padding-bottom:8px}.error{max-width:700px;margin:70px auto;background:linear-gradient(180deg,#17101a,#0c0c12);border:1px solid rgba(251,113,133,.3);padding:24px;border-radius:22px;text-align:center;box-shadow:var(--shadow)}
+.langgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.langchoice{padding:12px;border:1px solid var(--line);border-radius:12px;background:#121824;color:white;font-weight:900}.langchoice.active{background:linear-gradient(135deg,#8b5cf6,#6d4fe5);border-color:transparent;color:#fff}.empty-state{grid-column:1/-1;text-align:center;border:1px dashed rgba(167,139,250,.18);border-radius:17px;padding:23px 15px;background:rgba(139,92,246,.025);color:var(--muted)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid rgba(139,92,246,.85);outline-offset:2px}
+@media(hover:hover) and (pointer:fine){.card:hover,.methodcard:hover{transform:translateY(-3px);border-color:rgba(139,92,246,.25);box-shadow:0 18px 48px rgba(0,0,0,.28),0 0 0 1px rgba(139,92,246,.04)}.card:hover .pic img,.methodcard:hover .methodimg img{transform:scale(1.035)}.cat:hover{border-color:rgba(139,92,246,.25)}.add:hover,.buy:hover,.full:hover{filter:brightness(1.07)}}
+@media(max-width:620px){body{padding:9px 8px calc(98px + env(safe-area-inset-bottom))}.top{align-items:flex-start}.brand{font-size:22px}.brand:before{width:25px;height:25px;font-size:11px;vertical-align:3px}.top-actions{max-width:60%}.top-actions .cat,.top-actions .pill{padding:7px 8px;font-size:9.5px}.hero{padding:15px 14px;border-radius:20px}.hero h1{font-size:22px}.grid,.methodgrid{grid-template-columns:1fr}.pic,.methodimg{height:180px}.card,.methodcard{border-radius:19px}.toolbar{padding-top:5px}.dock{left:7px;right:7px}.buy{padding:10px 12px;font-size:12.5px}}
+@media(max-width:390px){.top{display:block}.top-actions{max-width:none;margin-top:7px;justify-content:flex-start}.top-actions .pill{margin-left:auto}.sectionnav{margin-top:5px}.hero{margin-top:7px}.pic,.methodimg{height:166px}.buy{max-width:49%}}
+/* Smoothness pass: same visual language, less mobile GPU work and cleaner motion. */
+button,.cat,.add,.buy,.full,.fav,.sectionbtn{touch-action:manipulation}
+.categoryrail,.box{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.card,.methodcard,.dock,.box{transform:translateZ(0)}
+.sheet{display:flex;visibility:hidden;opacity:0;pointer-events:none;transition:opacity .16s ease,visibility 0s linear .16s}
+.sheet.open{visibility:visible;opacity:1;pointer-events:auto;animation:none;transition:opacity .16s ease}
+.box{transform:translate3d(0,18px,0);animation:none;transition:transform .2s cubic-bezier(.2,.8,.2,1)}
+.sheet.open .box{transform:translate3d(0,0,0)}
+.skeleton-card{min-height:275px;border-radius:20px;border:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,rgba(18,23,34,.92),rgba(9,13,20,.94));padding:8px;overflow:hidden}
+.skeleton-block{border-radius:12px;background:linear-gradient(100deg,rgba(255,255,255,.045) 25%,rgba(255,255,255,.085) 38%,rgba(255,255,255,.045) 52%);background-size:220% 100%;animation:skeletonMove 1.1s linear infinite}
+.skeleton-pic{height:158px}.skeleton-line{height:12px;margin-top:10px}.skeleton-line.short{width:58%}.skeleton-line.tiny{width:38%;height:9px}
+@keyframes skeletonMove{to{background-position-x:-220%}}
+@media(max-width:700px){
+  body:before{opacity:.18}
+  .sectionnav,.toolbar,.badge,.fav,.dock,.sheet{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+  .sectionnav{background:rgba(9,12,18,.96)}
+  .toolbar{background:linear-gradient(180deg,rgba(5,6,10,1) 0%,rgba(5,6,10,.96) 76%,transparent 100%)}
+  .badge,.fav{background:rgba(5,8,13,.94)}
+  .dock{background:linear-gradient(135deg,rgba(13,17,26,.985),rgba(9,13,20,.98));box-shadow:0 14px 36px rgba(0,0,0,.42),inset 0 1px rgba(255,255,255,.05)}
+  .sheet{background:rgba(1,2,5,.84)}
+  .card,.methodcard{box-shadow:0 0 0 1px rgba(255,255,255,.025),0 12px 30px rgba(0,0,0,.2)}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes sheetUp{from{transform:translateY(16px);opacity:.72}to{transform:none;opacity:1}}@keyframes panelIn{from{opacity:.55;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+
+.method-gallery{display:flex;gap:8px;overflow-x:auto;padding:0 1px 10px;scrollbar-width:none}.method-gallery::-webkit-scrollbar{display:none}.method-gallery:empty{display:none}.method-gallery button{flex:0 0 76px;height:60px;padding:0;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:#0c121b}.method-gallery button.active{border-color:rgba(139,92,246,.8);box-shadow:0 0 0 2px rgba(139,92,246,.16)}.method-gallery img{width:100%;height:100%;object-fit:cover;display:block}.method-copybar{display:flex;justify-content:flex-end;margin:-3px 0 9px}.method-copybar button{font-size:11px;padding:7px 10px}.methodbody{white-space:normal}.methodbody .method-text{white-space:pre-wrap}.method-link-wrap{display:inline-flex;align-items:center;gap:5px;max-width:100%;vertical-align:middle}.method-link{color:#67e8f9;text-decoration:underline;text-underline-offset:2px;overflow-wrap:anywhere}.method-copy-link{padding:3px 6px!important;border-radius:7px!important;font-size:9px!important;line-height:1.2!important;background:rgba(139,92,246,.16)!important;border:1px solid rgba(139,92,246,.25)!important;white-space:nowrap}.method-copy-ok{color:#86efac}.method-delivery-note{font-size:11px;color:#9da9bb;margin:4px 0 10px}
+
+/* Advanced shop: compact browsing tools and a readable account workspace. */
+button,input,select{min-height:44px}button:focus-visible,input:focus-visible,select:focus-visible,[role="button"]:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
+.sectionnav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.sectionbtn{font-size:14px;padding:12px 8px;white-space:normal}
+.catalog-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.catalog-controls select{width:100%;min-width:0;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px;font-size:14px}
+.catalog-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 0 16px;font-size:14px}.check-filter{display:flex;align-items:center;gap:8px;font-size:14px}.check-filter input{min-height:20px;width:20px;height:20px;accent-color:var(--accent)}
+.catalog-result{color:var(--muted);font-size:14px}.account-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 12px}.account-head h1{font-size:clamp(22px,4vw,30px);margin:0}.account-hint{font-size:16px;line-height:1.6;color:var(--soft);max-width:600px}
+.account-tabs{display:flex;gap:8px;margin:20px 0}.account-card{padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--panel);margin:12px 0;font-size:16px;line-height:1.6}.account-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.account-card .muted{font-size:14px}.account-items{padding-left:20px;margin:16px 0}.order-status{padding:4px 10px;border-radius:8px;font-size:14px;background:var(--panel3)}.order-status.complete,.credit-in{color:#86efac}.order-status.pending{color:#fde68a}
+.shop-toast{position:fixed;bottom:calc(108px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);max-width:calc(100vw - 32px);width:max-content;background:#24304a;color:white;border:1px solid #62719b;padding:14px 18px;border-radius:14px;z-index:200;font-size:14px;box-shadow:var(--shadow)}
+.has-sheet{overflow:hidden}.sheet .box{max-height:85dvh;overflow-y:auto;overscroll-behavior:contain}.sheet .box h2{font-size:22px}.sheet .muted{font-size:14px}.reqinput{font-size:16px}.method-copybar button,.method-copy-link{font-size:14px!important}.hero h1{font-size:clamp(23px,4vw,32px)}.hero p{font-size:16px}.name{font-size:16px}.desc{font-size:14px}.methodbody{font-size:16px;line-height:1.7}.empty-state{font-size:16px}.method-filter{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:8px;max-width:45%;font-size:14px}.confirmation-balance{margin-top:8px;font-size:14px;color:var(--soft)}
+@media(max-width:480px){.catalog-controls{grid-template-columns:1fr}.account-card{padding:15px}.account-row{align-items:flex-start}.top-actions{flex-wrap:wrap}.sectionbtn{font-size:14px}.method-link-wrap{display:inline;overflow-wrap:anywhere}}
+</style></head><body>
+<div class="wrap" id="app">
+<div class="top"><div class="brandblock"><div class="brand" id="brand">Shop</div><div class="muted" id="tagline"></div></div><div class="top-actions"><button class="cat" id="langBtn" onclick="openLanguage()">🌐 EN</button><button class="cat" id="buyCreditsBtn" onclick="buyCredits()"></button><div class="pill" id="balance"></div></div></div>
+
+<div class="sectionnav">
+  <button id="shopSectionBtn" class="sectionbtn active" onclick="showSection('shop')"></button>
+  <button id="methodsSectionBtn" class="sectionbtn" onclick="showSection('methods')"></button>
+  <button id="accountSectionBtn" class="sectionbtn" data-ax="account" onclick="showSection('account')">My account</button>
+</div>
+
+<section id="shopSection" class="sectionpanel active">
+  <div class="hero"><h1 id="shopHeroTitle"></h1><p id="shopHeroText"></p></div>
+  <div class="toolbar">
+    <div class="toolbar-main"><input id="search" class="search" oninput="queueRender('shop')"><button class="cat" id="favFilter" onclick="toggleFavFilter()"></button></div>
+    <div id="cats" class="categoryrail"></div>
+    <div class="catalog-controls">
+      <select id="productSort" data-ax-label="sort" onchange="render()"><option value="featured" data-ax="featured">Recommended</option><option value="price-asc" data-ax="priceAsc">Price: low to high</option><option value="price-desc" data-ax="priceDesc">Price: high to low</option><option value="name" data-ax="name">Name: A–Z</option></select>
+      <select id="deliveryFilter" data-ax-label="delivery" onchange="render()"><option value="all" data-ax="deliveryAll">All delivery types</option><option value="instant" data-ax="instant">Instant delivery</option><option value="email" data-ax="email">Email setup</option><option value="manual" data-ax="manual">Prepared delivery</option><option value="login_assist" data-ax="login_assist">Login assistance</option></select>
+    </div>
+    <div class="catalog-meta"><label class="check-filter"><input id="availableOnly" type="checkbox" onchange="render()"><span data-ax="availableOnly">Available only</span></label><span id="catalogResult" class="catalog-result" aria-live="polite"></span><button class="cat" data-ax="reset" onclick="resetFilters()">Clear filters</button></div>
+  </div>
+  <div id="grid" class="grid"><div class="skeleton-card"><div class="skeleton-block skeleton-pic"></div><div class="skeleton-block skeleton-line"></div><div class="skeleton-block skeleton-line short"></div><div class="skeleton-block skeleton-line tiny"></div></div><div class="skeleton-card"><div class="skeleton-block skeleton-pic"></div><div class="skeleton-block skeleton-line"></div><div class="skeleton-block skeleton-line short"></div><div class="skeleton-block skeleton-line tiny"></div></div><div class="skeleton-card"><div class="skeleton-block skeleton-pic"></div><div class="skeleton-block skeleton-line"></div><div class="skeleton-block skeleton-line short"></div><div class="skeleton-block skeleton-line tiny"></div></div><div class="skeleton-card"><div class="skeleton-block skeleton-pic"></div><div class="skeleton-block skeleton-line"></div><div class="skeleton-block skeleton-line short"></div><div class="skeleton-block skeleton-line tiny"></div></div></div>
+</section>
+
+<section id="methodsSection" class="sectionpanel">
+  <div class="hero"><h1 id="methodsHeroTitle"></h1><p id="methodsHeroText"></p></div>
+  <div class="toolbar">
+    <div class="toolbar-main"><input id="methodSearch" class="search" oninput="queueRender('methods')"><select class="method-filter" id="methodFilter" aria-label="Filter methods" onchange="renderMethods()"><option value="all" data-ax="allMethods">All methods</option><option value="free" data-ax="freeMethods">Free</option><option value="premium" data-ax="paidMethods">Premium</option><option value="owned" data-ax="ownedMethods">Unlocked</option></select><span id="freePremiumBtn" hidden></span></div>
+  </div>
+  <div id="methodsGrid" class="methodgrid"></div>
+</section>
+<section id="accountSection" class="sectionpanel">
+  <div class="account-head"><h1 data-ax="accountTitle">Your purchases & credits</h1><button id="accountRefresh" class="cat" data-ax="refresh" onclick="loadAccount(true)">Refresh</button></div>
+  <p class="account-hint" data-ax="accountHint">Check order status here. Delivery details stay in your private Telegram chat.</p>
+  <div class="account-tabs"><button id="accountOrdersTab" class="cat active" aria-pressed="true" data-ax="orders" onclick="switchAccountTab('orders')">Orders</button><button id="accountWalletTab" class="cat" aria-pressed="false" data-ax="wallet" onclick="switchAccountTab('wallet')">Credit activity</button></div>
+  <div id="accountList" aria-live="polite"></div><button id="accountMore" class="full" data-ax="more" onclick="loadAccount(false)" hidden>Load more</button>
+</section>
+</div>
+<div class="dock"><div class="cartinfo" onclick="openCart()"><div class="muted"><span id="count">0</span> <span id="cartCountText"></span></div><div id="total" class="total"></div></div><button id="buy" class="buy" disabled onclick="openConfirm()"></button></div>
+<div id="sheet" class="sheet" onclick="if(event.target===this)closeCart()"><div class="box"><div class="sheet-handle"></div><div class="sheet-head"><h2 id="cartTitle"></h2><button onclick="closeCart()" class="cat">✕</button></div><div id="rows"></div><button class="cat" data-ax="clearCart" onclick="emptyCart()">Empty cart</button></div></div>
+<div id="methodSheet" class="sheet" onclick="if(event.target===this)closeMethod()"><div class="box"><div class="sheet-handle"></div><div class="sheet-head"><h2 id="methodDetailTitle"></h2><button onclick="closeMethod()" class="cat">✕</button></div><div id="methodDetailImage" class="methodimg" style="margin-bottom:9px"></div><div id="methodDetailGallery" class="method-gallery"></div><div class="method-copybar"><button id="copyMethodBtn" class="cat" type="button">📋 Copy method</button></div><div id="methodDeliveryNote" class="method-delivery-note"></div><div id="methodDetailBody" class="methodbody"></div></div></div>
+<div id="confirmSheet" class="sheet" onclick="if(event.target===this)closeConfirm()"><div class="box"><div class="sheet-handle"></div><div class="sheet-head"><h2 id="confirmTitle"></h2><button onclick="closeConfirm()" class="cat">✕</button></div><div class="confirm"><b id="confirmCheck"></b><div class="muted" id="confirmDelivery" style="margin-top:6px"></div></div><div id="confirmRows"></div><button class="cat" data-ax="changeCart" onclick="closeConfirm();openCart()">Edit cart</button><div id="requirements"></div><div class="confirm"><div class="muted" id="totalChargeLabel"></div><div class="total" id="confirmTotal"></div><div class="confirmation-balance" id="remainingBalance"></div></div><button class="full" id="confirmPayBtn" onclick="checkout()"></button></div></div>
+<div id="languageSheet" class="sheet" onclick="if(event.target===this)closeLanguage()"><div class="box"><div class="sheet-handle"></div><div class="sheet-head"><h2 id="languageTitle"></h2><button onclick="closeLanguage()" class="cat">✕</button></div><p class="muted" id="languageText"></p><div class="langgrid"><button id="langEN" class="langchoice" onclick="setLanguage('en')">🇬🇧 English</button><button id="langID" class="langchoice" onclick="setLanguage('id')">🇮🇩 Bahasa Indonesia</button></div></div></div>
+<div id="shopToast" class="shop-toast" role="status" aria-live="polite" hidden></div>
+<script src="/assets/shop-core.js?v=2"></script>
+<script>
+(()=>{
+ const q=new URLSearchParams(location.search),l=q.get('launch');
+ if(!l)return;
+ window.__shopBootstrapPromise=fetch(`/api/shop-bootstrap?launch=${encodeURIComponent(l)}`,{cache:'no-store'})
+  .then(async response=>({response,data:await response.json().catch(()=>({}))}))
+  .catch(error=>({error}));
+})();
+</script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+const tg=window.Telegram?.WebApp;if(tg){tg.ready();tg.expand()}
+const qs=new URLSearchParams(location.search),launch=qs.get('launch');let uid=qs.get('uid'),sig=qs.get('sig');const user={id:Number(uid||0)};
+let products=[],methods=[],cart={},category='All',wishlist=new Set(),favOnly=qs.get('wishlist')==='1',lang='en';
+let productMap=new Map(),methodMap=new Map(),renderFrame=0,methodRenderFrame=0;
+const TX={
+ en:{tagline:'Digital delivery • Telegram verified',buyCredits:'💰 Buy Credits',shop:'🛍 Shop',methods:'📚 Methods',shopHeroTitle:'Pick it. Review it. Get it instantly.',shopHeroText:'Search, favorite products, choose a variant, confirm your cart, then pay with credits.',searchProducts:'Search products…',wishlist:'❤️ Wishlist',methodsHeroTitle:'Methods',methodsHeroText:'Browse free and premium methods. Paid methods unlock permanently after purchase.',searchMethods:'Search methods…',freePremium:'📚 Free & Premium',itemsTap:'item(s) • tap to review',reviewOrder:'Review order',yourCart:'Your cart',method:'Method',confirmPurchase:'Confirm purchase',checkOrder:'Check your order before spending credits.',deliveryPrivate:'Digital deliveries are sent privately in Telegram after payment.',totalCharge:'Total to charge',confirmPay:'✅ Confirm & pay with credits',language:'Language',chooseLanguage:'Choose your language. This changes both the Mini App and your saved bot language.',credits:'credits',all:'All',general:'General',featured:'FEATURED',bestseller:'BESTSELLER',newBadge:'NEW',left:'left',soldOut:'sold out',available:'available',variant:'variant',variants:'variants',inStock:'in stock',selectedSoldOut:'Selected variant sold out',outOfStock:'Out of stock',add:'+ Add',noProducts:'No products found.',cartEmpty:'Cart is empty.',noPreview:'No preview available.',unlocked:'✅ Unlocked',free:'FREE',openMethod:'Open method',claimFree:'Claim free',buyMethod:'Buy method',copyMethod:'Copy method',copyLink:'Copy',copied:'Copied',methodSent:'Also sent to your Telegram.',noMethods:'No methods found.',buyConfirm:(title,price)=>`Buy "${title}" for ${price} credits?`,unlockFail:'Could not unlock method',openFail:'Could not open method',openTelegram:'Open this shop inside Telegram.',lockedTitle:'🔒 Open from Telegram',lockedText:'Please open the shop using the bot menu after joining the required Telegram chat.',shopLocked:'🔒 Shop locked',returnVerify:'Return to Telegram, join the required chat, then tap Verify.',rates:'Credit rates',adminNotConfigured:'Admin contact is not configured.',contactHello:'Hello, I want to buy credits.',contactRates:'Rates',contactAsk:'Please tell me the payment method.',languageSaveFail:'Could not save language. Please try again.',keyBadge:'KEY REQUIRED',emailBadge:'EMAIL SETUP',keyLabel:'Special purchase key',keyHelp:'This product cannot be purchased without the current admin key.',emailLabel:'Subscription email',emailHelp:'The subscription will be activated on this email after payment.',emailSetup:'Email subscription setup',emailPending:'Admin will set up this subscription on your email.',keyMissing:'Enter the special purchase key.',emailInvalid:'Enter a valid subscription email.',manualBadge:'FULFILLED BY REQUEST',loginAssistBadge:'LOGIN ASSISTANCE',loginAssistSetup:'Send activation code to admin',loginAssistPending:'After payment, use the activation code shown in your order and send it to the admin in Telegram for activation.',manualSetup:'Fulfilled by request',manualPending:'This order will be fulfilled by request. The admin will prepare it after payment and deliver it to you in Telegram.',mixedPending:'Some items are delivered instantly; requested items will be prepared by the admin and delivered in Telegram.',validating:'Checking…',checkoutFailed:'Checkout validation failed',productsRestricted:'Product purchases are temporarily disabled for your account. Contact support.',methodsRestricted:'New Method purchases are temporarily disabled for your account.',sessionExpired:'🔒 Shop session expired',sessionExpiredText:'This secure shop session is no longer valid. Close this window and tap Shop / Methods in Telegram again. It will open directly with a fresh session.',returnTelegram:'Return to Telegram'},
+ id:{tagline:'Pengiriman digital • Terverifikasi Telegram',buyCredits:'💰 Beli Kredit',shop:'🛍 Toko',methods:'📚 Metode',shopHeroTitle:'Pilih. Periksa. Terima secara instan.',shopHeroText:'Cari produk, simpan favorit, pilih varian, periksa keranjang, lalu bayar dengan kredit.',searchProducts:'Cari produk…',wishlist:'❤️ Favorit',methodsHeroTitle:'Metode',methodsHeroText:'Jelajahi metode gratis dan premium. Metode berbayar terbuka permanen setelah dibeli.',searchMethods:'Cari metode…',freePremium:'📚 Gratis & Premium',itemsTap:'item • ketuk untuk memeriksa',reviewOrder:'Periksa pesanan',yourCart:'Keranjang Anda',method:'Metode',confirmPurchase:'Konfirmasi pembelian',checkOrder:'Periksa pesanan Anda sebelum menggunakan kredit.',deliveryPrivate:'Produk digital dikirim secara pribadi melalui Telegram setelah pembayaran.',totalCharge:'Total yang ditagihkan',confirmPay:'✅ Konfirmasi & bayar dengan kredit',language:'Bahasa',chooseLanguage:'Pilih bahasa. Ini mengubah bahasa Mini App dan bahasa bot yang tersimpan.',credits:'kredit',all:'Semua',general:'Umum',featured:'UNGGULAN',bestseller:'TERLARIS',newBadge:'BARU',left:'tersisa',soldOut:'habis',available:'tersedia',variant:'varian',variants:'varian',inStock:'tersedia',selectedSoldOut:'Varian yang dipilih habis',outOfStock:'Stok habis',add:'+ Tambah',noProducts:'Produk tidak ditemukan.',cartEmpty:'Keranjang kosong.',noPreview:'Pratinjau tidak tersedia.',unlocked:'✅ Terbuka',free:'GRATIS',openMethod:'Buka metode',claimFree:'Klaim gratis',buyMethod:'Beli metode',copyMethod:'Salin metode',copyLink:'Salin',copied:'Tersalin',methodSent:'Juga dikirim ke Telegram Anda.',noMethods:'Metode tidak ditemukan.',buyConfirm:(title,price)=>`Beli "${title}" seharga ${price} kredit?`,unlockFail:'Tidak dapat membuka metode',openFail:'Tidak dapat membuka metode',openTelegram:'Buka toko ini dari Telegram.',lockedTitle:'🔒 Buka dari Telegram',lockedText:'Silakan buka toko dari menu bot setelah bergabung dengan chat Telegram yang diperlukan.',shopLocked:'🔒 Toko terkunci',returnVerify:'Kembali ke Telegram, bergabung dengan chat yang diperlukan, lalu tekan Verifikasi.',rates:'Harga kredit',adminNotConfigured:'Kontak admin belum dikonfigurasi.',contactHello:'Halo, saya ingin membeli kredit.',contactRates:'Harga',contactAsk:'Tolong beri tahu metode pembayarannya.',languageSaveFail:'Tidak dapat menyimpan bahasa. Silakan coba lagi.',keyBadge:'BUTUH KUNCI',emailBadge:'SETUP EMAIL',keyLabel:'Kunci pembelian khusus',keyHelp:'Produk ini tidak dapat dibeli tanpa kunci admin yang aktif.',emailLabel:'Email langganan',emailHelp:'Langganan akan diaktifkan pada email ini setelah pembayaran.',emailSetup:'Setup langganan email',emailPending:'Admin akan menyiapkan langganan pada email Anda.',keyMissing:'Masukkan kunci pembelian khusus.',emailInvalid:'Masukkan email langganan yang valid.',manualBadge:'DIPENUHI SESUAI PERMINTAAN',loginAssistBadge:'BANTUAN LOGIN',loginAssistSetup:'Kirim kode aktivasi ke admin',loginAssistPending:'Setelah pembayaran, gunakan kode aktivasi pada pesanan Anda dan kirimkan kepada admin melalui Telegram untuk aktivasi.',manualSetup:'Dipenuhi sesuai permintaan',manualPending:'Pesanan ini akan dipenuhi sesuai permintaan. Admin akan menyiapkannya setelah pembayaran dan mengirimkannya kepada Anda di Telegram.',mixedPending:'Beberapa item dikirim instan; item permintaan akan disiapkan admin dan dikirim di Telegram.',validating:'Memeriksa…',checkoutFailed:'Validasi checkout gagal',productsRestricted:'Pembelian produk sementara dinonaktifkan untuk akun Anda. Hubungi dukungan.',methodsRestricted:'Pembelian Method baru sementara dinonaktifkan untuk akun Anda.',sessionExpired:'🔒 Sesi toko kedaluwarsa',sessionExpiredText:'Sesi toko aman ini sudah tidak berlaku. Tutup jendela ini lalu tekan Toko / Metode di Telegram lagi. Toko akan terbuka langsung dengan sesi baru.',returnTelegram:'Kembali ke Telegram'}
+};
+const t=k=>TX[lang]?.[k]??TX.en[k]??k;
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const money=n=>Number(n).toLocaleString(lang==='id'?'id-ID':'en-IN')+' '+t('credits');
+const productById=id=>productMap.get(id);
+const methodById=id=>methodMap.get(id);
+function queueRender(which){
+ if(which==='methods'){if(methodRenderFrame)cancelAnimationFrame(methodRenderFrame);methodRenderFrame=requestAnimationFrame(()=>{methodRenderFrame=0;renderMethods()});return}
+ if(renderFrame)cancelAnimationFrame(renderFrame);renderFrame=requestAnimationFrame(()=>{renderFrame=0;render()})
+}
+function showSkeletons(){
+ if(!grid||grid.children.length)return;
+ grid.innerHTML=Array.from({length:4},()=>`<div class="skeleton-card"><div class="skeleton-block skeleton-pic"></div><div class="skeleton-block skeleton-line"></div><div class="skeleton-block skeleton-line short"></div><div class="skeleton-block skeleton-line tiny"></div></div>`).join('')
+}
+function applyI18n(){
+ document.documentElement.lang=lang==='id'?'id':'en';
+ tagline.textContent=t('tagline');buyCreditsBtn.textContent=t('buyCredits');shopSectionBtn.textContent=t('shop');methodsSectionBtn.textContent=t('methods');
+ shopHeroTitle.textContent=t('shopHeroTitle');shopHeroText.textContent=t('shopHeroText');search.placeholder=t('searchProducts');favFilter.textContent=t('wishlist');
+ methodsHeroTitle.textContent=t('methodsHeroTitle');methodsHeroText.textContent=t('methodsHeroText');methodSearch.placeholder=t('searchMethods');freePremiumBtn.textContent=t('freePremium');
+ cartCountText.textContent=t('itemsTap');buy.textContent=t('reviewOrder');cartTitle.textContent=t('yourCart');methodDetailTitle.textContent=t('method');copyMethodBtn.textContent='📋 '+t('copyMethod');confirmTitle.textContent=t('confirmPurchase');confirmCheck.textContent=t('checkOrder');confirmDelivery.textContent=t('deliveryPrivate');totalChargeLabel.textContent=t('totalCharge');confirmPayBtn.textContent=t('confirmPay');
+ languageTitle.textContent='🌐 '+t('language');languageText.textContent=t('chooseLanguage');langBtn.textContent=lang==='id'?'🌐 ID':'🌐 EN';langEN.classList.toggle('active',lang==='en');langID.classList.toggle('active',lang==='id');
+ if(window.shopData)balance.textContent='💳 '+money(window.shopData.balance);
+ paintAdvancedLanguage();renderCats();render();renderMethods();
+}
+function variantOf(p,id){return id?ShopCore.variant(p,id):ShopCore.variants(p)[0]}
+function selectedVariant(p){let sel=document.getElementById('v-'+p.id);return variantOf(p,sel?.value)}
+async function init(){
+ let d=null;
+ if((!uid||!sig)&&launch){
+   try{
+     // Fast path: launcher exchange + membership check + shop data in one request.
+     const prefetched=window.__shopBootstrapPromise?await window.__shopBootstrapPromise:null;
+     if(prefetched?.error)throw prefetched.error;
+     const sr=prefetched?.response||await fetch(`/api/shop-bootstrap?launch=${encodeURIComponent(launch)}`,{cache:'no-store'});
+     const sd=prefetched?prefetched.data:await sr.json().catch(()=>({}));
+     if(!sr.ok){
+       const msg=sd.detail||t('lockedText');
+       document.body.innerHTML=`<div class="error"><h2>${sr.status===403?t('shopLocked'):t('sessionExpired')}</h2><p>${esc(msg)}</p><button class="full" onclick="if(tg?.close)tg.close();else history.back()">${t('returnTelegram')}</button></div>`;return
+     }
+     uid=String(sd.uid||'');sig=String(sd.sig||'');user.id=Number(uid||0);d=sd;
+     const clean=location.pathname+(favOnly?'?wishlist=1':'')+location.hash;
+     try{history.replaceState({},document.title,clean)}catch{}
+   }catch{
+     document.body.innerHTML=`<div class="error"><h2>${t('shopLocked')}</h2><p>${t('lockedText')}</p><button class="full" onclick="if(tg?.close)tg.close();else history.back()">${t('returnTelegram')}</button></div>`;return
+   }
+ }
+ if(!uid||!sig){document.body.innerHTML=`<div class="error"><h2>${t('lockedTitle')}</h2><p>${t('lockedText')}</p><button class="full" onclick="if(tg?.close)tg.close();else history.back()">${t('returnTelegram')}</button></div>`;return}
+ if(!d){
+   let r=await fetch(`/api/shop-data?uid=${encodeURIComponent(uid)}&sig=${encodeURIComponent(sig)}`,{cache:'no-store'});
+   if(!r.ok){
+     let detail='';try{const body=await r.json();detail=body.detail||''}catch{try{detail=await r.text()}catch{}}
+     if(r.status===401){document.body.innerHTML=`<div class="error"><h2>${t('sessionExpired')}</h2><p>${t('sessionExpiredText')}</p><button class="full" onclick="if(tg?.close)tg.close();else history.back()">${t('returnTelegram')}</button></div>`;return}
+     document.body.innerHTML=`<div class="error"><h2>${t('shopLocked')}</h2><p>${esc(detail)}</p><p>${t('returnVerify')}</p><button class="full" onclick="if(tg?.close)tg.close();else history.back()">${t('returnTelegram')}</button></div>`;return
+   }
+   d=await r.json();
+ }
+ window.shopData=d;window.shopName=d.shopName;products=d.products||[];methods=d.methods||[];productMap=new Map(products.map(p=>[p.id,p]));methodMap=new Map(methods.map(m=>[m.id,m]));wishlist=new Set(d.wishlist||[]);lang=(d.language==='id'?'id':'en');brand.textContent=d.shopName;restoreCart();applyI18n();
+}
+function renderCats(){
+ if(!window.shopData)return;
+ const values=['All',...new Set(products.map(p=>p.category||'General'))];
+ cats.replaceChildren(...values.map(value=>{
+   const button=document.createElement('button');button.type='button';button.className='cat'+(value===category?' active':'');
+   button.textContent=value==='All'?t('all'):value;button.setAttribute('aria-pressed',String(value===category));
+   button.addEventListener('click',()=>{category=value;renderCats();render()});return button;
+ }));favFilter.classList.toggle('active',favOnly);
+}
+function badgeHTML(p){
+ let a=[];
+ if(p.featured)a.push('⭐ '+t('featured'));
+ if(p.bestseller)a.push('🔥 '+t('bestseller'));
+ if(p.badge_new)a.push('✨ '+t('newBadge'));
+ if(p.purchase_key_required)a.push('🔐 '+t('keyBadge'));
+ if(p.fulfillment_mode==='email')a.push('📧 '+t('emailBadge'));
+ if(p.fulfillment_mode==='manual')a.push('🛠 '+t('manualBadge'));if(p.fulfillment_mode==='login_assist')a.push('🔐 '+t('loginAssistBadge'));
+ return a.map(x=>`<span class="badge">${x}</span>`).join('')
+}
+function render(){
+ if(!window.shopData)return;
+ const list=filterCatalog();byId('catalogResult').textContent=list.length+' '+ax('results');
+ grid.innerHTML=list.map((p,idx)=>{
+   let vars=p.variants||[];
+   let fallback={price:p.price,stock:p.stock,id:'default',label:'Standard'};
+   let first=vars.find(v=>Number(v.stock)>0)||vars[0]||fallback;
+   let emailMode=p.fulfillment_mode==='email',manualMode=p.fulfillment_mode==='manual',loginAssistMode=p.fulfillment_mode==='login_assist',asyncMode=emailMode||manualMode||loginAssistMode;
+   let availableCount=asyncMode?vars.length:(vars.length?vars.filter(v=>Number(v.stock)>0).length:(Number(first.stock)>0?1:0));
+   let asyncLabel=emailMode?t('emailSetup'):(loginAssistMode?t('loginAssistSetup'):t('manualSetup'));
+   let chips=vars.length?`<div class="variantSummary">${vars.map(v=>`<span class="vchip ${asyncMode||Number(v.stock)>0?'ok':'out'}">${esc(v.label)}: ${asyncMode?asyncLabel:(Number(v.stock)>0?Number(v.stock)+' '+t('left'):t('soldOut'))}</span>`).join('')}</div>`:'';
+   let variantsWord=availableCount===1?t('variant'):t('variants');
+   let metaText=asyncMode?asyncLabel:(first.stock>0?first.stock+' '+t('available')+' • '+availableCount+' '+variantsWord+' '+t('inStock'):t('selectedSoldOut'));
+   return `<article class="card"><div class="badges">${badgeHTML(p)}</div><button class="fav ${wishlist.has(p.id)?'on':''}" data-fav-id="${esc(p.id)}" onclick="toggleFav('${p.id}')">${wishlist.has(p.id)?'♥':'♡'}</button><div class="pic">${p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="${idx<2?'eager':'lazy'}" fetchpriority="${idx<2?'high':'auto'}" decoding="async">`:esc(p.emoji||'🔑')}</div><div class="name">${esc(p.name)}</div><div class="desc">${esc(p.description||'')}</div>${chips}${vars.length?`<select class="variant" id="v-${p.id}" onchange="renderCardMeta('${p.id}')">${vars.map(v=>`<option value="${esc(v.id)}" ${v.id===first.id?'selected':''}>${esc(v.label)} • ${money(v.price)}${asyncMode?' • '+asyncLabel:' • '+v.stock+' '+t('left')+(Number(v.stock)<1?' • '+t('soldOut').toUpperCase():'')}</option>`).join('')}</select>`:''}<div class="meta"><div><div class="price" id="price-${p.id}">${money(first.price)}</div><div class="stock" id="stock-${p.id}">${metaText}</div></div><button class="add" id="add-${p.id}" ${(!asyncMode&&first.stock<1)?'disabled':''} onclick="add('${p.id}')">${t('add')}</button></div></article>`
+ }).join('')||`<div class="empty-state">${t('noProducts')}</div>`;
+ renderCart()
+}
+function renderCardMeta(id){
+ let p=productById(id),v=selectedVariant(p);if(!p||!v)return;
+ document.getElementById('price-'+id).textContent=money(v.price);
+ const emailMode=p.fulfillment_mode==='email',manualMode=p.fulfillment_mode==='manual',loginAssistMode=p.fulfillment_mode==='login_assist',asyncMode=emailMode||manualMode||loginAssistMode;
+ document.getElementById('stock-'+id).textContent=emailMode?t('emailSetup'):(loginAssistMode?t('loginAssistSetup'):(manualMode?t('manualSetup'):(v.stock>0?v.stock+' '+t('available'):t('outOfStock'))));
+ document.getElementById('add-'+id).disabled=!asyncMode&&v.stock<1
+}
+function paintFav(id){for(const b of document.querySelectorAll('.fav[data-fav-id]')){if(b.dataset.favId===id){const on=wishlist.has(id);b.classList.toggle('on',on);b.textContent=on?'♥':'♡'}}}
+async function toggleFav(id){
+ const before=wishlist.has(id);before?wishlist.delete(id):wishlist.add(id);
+ if(favOnly)render();else paintFav(id);
+ try{
+  const r=await fetch('/api/wishlist/toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({uid:Number(uid),sig,product_id:id})});
+  if(!r.ok)throw new Error(await r.text());
+  const d=await r.json();d.favorite?wishlist.add(id):wishlist.delete(id);
+  if(favOnly)render();else paintFav(id)
+ }catch(e){before?wishlist.add(id):wishlist.delete(id);if(favOnly)render();else paintFav(id);alert(e.message||'Could not update wishlist')}
+}
+function toggleFavFilter(){favOnly=!favOnly;renderCats();render()}
+function add(id){
+ const restrictions=window.shopData?.restrictions||{};if(restrictions.suspended||restrictions.purchase_blocked)return alert(t('productsRestricted'));
+ let p=productById(id),v=selectedVariant(p);if(!p||!v)return;
+ const emailMode=p.fulfillment_mode==='email',manualMode=p.fulfillment_mode==='manual',loginAssistMode=p.fulfillment_mode==='login_assist',asyncMode=emailMode||manualMode||loginAssistMode;
+ if(!asyncMode&&v.stock<1)return;
+ let key=id+':'+v.id;
+ if(emailMode||loginAssistMode){cart[key]=1}else if(manualMode){cart[key]=Math.min((cart[key]||0)+1,20)}else{cart[key]=Math.min((cart[key]||0)+1,v.stock,20)}
+ try{tg?.HapticFeedback?.impactOccurred('light')}catch{}
+ renderCart()
+}
+function ch(key,d){cart[key]=(cart[key]||0)+d;if(cart[key]<=0)delete cart[key];renderCart()}
+function totals(){let c=0,tv=0;for(let [key,q] of Object.entries(cart)){let [id,vid]=key.split(':');let p=productById(id),v=p&&variantOf(p,vid);if(v){c+=q;tv+=v.price*q}}return{c,t:tv}}
+function cartRows(){return Object.entries(cart).map(([key,q])=>{
+ let [id,vid]=key.split(':');let p=productById(id),v=p&&variantOf(p,vid);if(!p||!v)return '';
+ const emailMode=p.fulfillment_mode==='email',manualMode=p.fulfillment_mode==='manual',loginAssistMode=p.fulfillment_mode==='login_assist';
+ return `<div class="row"><div class="cart-thumb">${p.image?`<img src="${esc(p.image)}" alt="">`:esc(p.emoji||'🔑')}</div><div class="ri"><b>${esc(p.name)}</b><div class="muted">${esc(v.label)} • ${money(v.price*q)}${emailMode?' • 📧 '+t('emailSetup'):''}${manualMode?' • 🛠 '+t('manualSetup'):''}${loginAssistMode?' • 🔐 '+t('loginAssistSetup'):''}${p.purchase_key_required?' • 🔐 '+t('keyBadge'):''}</div></div><div class="qty"><button onclick="ch('${key}',-1)">−</button><b>${q}</b><button ${emailMode||loginAssistMode?'disabled':''} onclick="addExact('${id}','${vid}')">+</button></div></div>`
+}).join('')}
+function addExact(id,vid){
+ const restrictions=window.shopData?.restrictions||{};if(restrictions.suspended||restrictions.purchase_blocked)return alert(t('productsRestricted'));
+ let p=productById(id),v=variantOf(p,vid),key=id+':'+vid;if(!p||!v)return;
+ if(p.fulfillment_mode==='email'||p.fulfillment_mode==='login_assist'){cart[key]=1}else if(p.fulfillment_mode==='manual'){cart[key]=Math.min((cart[key]||0)+1,20)}else if((cart[key]||0)<v.stock){cart[key]=(cart[key]||0)+1}
+ renderCart()
+}
+function renderCart(forceRows=false){if(!window.shopData)return;saveCart();let tv=totals();count.textContent=tv.c;total.textContent=money(tv.t);buy.disabled=!tv.c;if(forceRows||sheet.classList.contains('open'))rows.innerHTML=cartRows()||`<div class="empty-state">${t('cartEmpty')}</div>`}
+function openCart(){renderCart(true);sheet.classList.add('open');try{tg?.HapticFeedback?.impactOccurred('soft')}catch{}}
+function closeCart(){sheet.classList.remove('open')}
+function requirementHTML(){
+ const locked=new Map();const emailLines=[];
+ for(const [key,q] of Object.entries(cart)){
+   const [id,vid]=key.split(':');const p=productById(id);const v=p&&variantOf(p,vid);if(!p||!v)continue;
+   if(p.purchase_key_required)locked.set(p.id,p);
+   if(p.fulfillment_mode==='email')emailLines.push({key,p,v});
+ }
+ let html='';
+ if(locked.size){html+=`<div class="reqgroup"><b>🔐 ${t('keyLabel')}</b><div class="reqnote">${t('keyHelp')}</div>${[...locked.values()].map(p=>`<label>${esc(p.name)}</label><input class="reqinput" type="password" autocomplete="off" data-purchase-key="${esc(p.id)}" placeholder="${esc(t('keyLabel'))}">`).join('')}</div>`}
+ if(emailLines.length){html+=`<div class="reqgroup"><b>📧 ${t('emailLabel')}</b><div class="reqnote">${t('emailHelp')}</div>${emailLines.map(({key,p,v})=>`<label>${esc(p.name)} — ${esc(v.label)}</label><input class="reqinput" type="email" inputmode="email" autocomplete="email" data-email-line="${esc(key)}" placeholder="name@example.com">`).join('')}</div>`}
+ return html
+}
+function openConfirm(){
+ let tv=totals();if(!tv.c)return;
+ confirmRows.innerHTML=cartRows();confirmRows.querySelectorAll('.qty button').forEach(b=>b.remove());confirmTotal.textContent=money(tv.t);requirements.innerHTML=requirementHTML();const remaining=Number(window.shopData.balance||0)-tv.t;byId('remainingBalance').textContent=remaining<0?ax('balanceLow'):ax('balanceAfter')+': '+money(remaining);confirmPayBtn.disabled=remaining<0;
+ const modes=Object.keys(cart).map(key=>{const [id]=key.split(':');return productById(id)?.fulfillment_mode});
+ const hasEmail=modes.includes('email'),hasManual=modes.includes('manual'),hasLoginAssist=modes.includes('login_assist'),hasInstant=modes.includes('instant');
+ confirmDelivery.textContent=hasLoginAssist?t('loginAssistPending'):(hasManual?(hasInstant||hasEmail?t('mixedPending'):t('manualPending')):(hasEmail?t('emailPending'):t('deliveryPrivate')));
+ confirmSheet.classList.add('open');try{tg?.HapticFeedback?.impactOccurred('soft')}catch{}
+}
+function closeConfirm(){confirmSheet.classList.remove('open')}
+function showSection(section){const isMethods=section==='methods';shopSection.classList.toggle('active',!isMethods);methodsSection.classList.toggle('active',isMethods);shopSectionBtn.classList.toggle('active',!isMethods);methodsSectionBtn.classList.toggle('active',isMethods);document.querySelector('.dock').style.display=isMethods?'none':'flex';brand.textContent=isMethods?t('methodsHeroTitle'):(window.shopName||t('shop'));try{tg?.HapticFeedback?.selectionChanged()}catch{}}
+let currentMethodBody='';
+async function copyMethodText(value,button){
+ const text=String(value||'');if(!text)return;
+ let ok=false;try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(text);ok=true}}catch{}
+ if(!ok){try{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();ok=document.execCommand('copy');ta.remove()}catch{}}
+ if(button&&ok){const old=button.textContent;button.textContent='✓ '+t('copied');button.classList.add('method-copy-ok');setTimeout(()=>{button.textContent=old;button.classList.remove('method-copy-ok')},1100)}
+ try{if(ok)tg?.HapticFeedback?.notificationOccurred('success')}catch{}
+}
+function methodBodyHtml(text){
+ const raw=String(text||''),re=/https?:\/\/[^\s<>"']+/gi;let out='',pos=0,match;
+ while((match=re.exec(raw))){out+=esc(raw.slice(pos,match.index)).replace(/\n/g,'<br>');let url=match[0],trail='';while(url&&/[.,;:!?]$/.test(url)){trail=url.slice(-1)+trail;url=url.slice(0,-1)}const safe=esc(url);out+=`<span class="method-link-wrap"><a class="method-link" href="${safe}" target="_blank" rel="noopener noreferrer">${safe}</a><button type="button" class="method-copy-link" data-url="${safe}">📋 ${t('copyLink')}</button></span>${esc(trail)}`;pos=match.index+match[0].length}
+ out+=esc(raw.slice(pos)).replace(/\n/g,'<br>');return `<div class="method-text">${out}</div>`
+}
+function wireMethodBody(){
+ methodDetailBody.querySelectorAll('.method-copy-link').forEach(btn=>btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();copyMethodText(btn.dataset.url||'',btn)}));
+ methodDetailBody.querySelectorAll('a.method-link').forEach(a=>a.addEventListener('click',e=>{const url=a.href;try{if(tg?.openLink){e.preventDefault();tg.openLink(url)}}catch{}}));
+}
+function renderMethodGalleryDetail(method){
+ const cover=String(method?.image||''),gallery=Array.isArray(method?.gallery)?method.gallery.filter(Boolean):[],images=[];if(cover)images.push(cover);gallery.forEach(x=>{if(x&&!images.includes(x))images.push(x)});
+ const main=images[0]||'';methodDetailImage.innerHTML=main?`<img src="${esc(main)}" decoding="async">`:'📘';
+ const thumbs=images.length>1?images:gallery;methodDetailGallery.innerHTML=thumbs.map((src,i)=>`<button type="button" class="${src===main?'active':''}" data-src="${esc(src)}"><img src="${esc(src)}" loading="lazy" decoding="async"></button>`).join('');
+ methodDetailGallery.querySelectorAll('button[data-src]').forEach(btn=>btn.addEventListener('click',()=>{const src=btn.dataset.src||'';if(!src)return;methodDetailImage.innerHTML=`<img src="${esc(src)}" decoding="async">`;methodDetailGallery.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===btn));try{tg?.HapticFeedback?.selectionChanged()}catch{}}));
+}
+copyMethodBtn.addEventListener('click',()=>copyMethodText(currentMethodBody,copyMethodBtn));
+function renderMethods(){if(!window.shopData)return;const q=methodSearch.value.toLowerCase();const filter=byId('methodFilter').value;const list=methods.filter(m=>`${m.title} ${m.summary||''}`.toLowerCase().includes(q)&&(filter==='all'||(filter==='free'&&m.is_free)||(filter==='premium'&&!m.is_free)||(filter==='owned'&&m.unlocked)));methodsGrid.innerHTML=list.map((m,idx)=>`<article class="methodcard"><div class="methodimg">${m.image?`<img src="${esc(m.image)}" alt="${esc(m.title)}" loading="${idx<2?'eager':'lazy'}" fetchpriority="${idx<2?'high':'auto'}" decoding="async">`:'📘'}</div><div class="name">${esc(m.title)}</div><div class="desc">${esc(m.summary||t('noPreview'))}</div><div class="price">${m.unlocked?t('unlocked'):m.is_free?t('free'):money(m.price||0)}</div><button class="add" style="margin-top:10px" onclick="event.stopPropagation();methodAction('${m.id}')">${m.unlocked?t('openMethod'):m.is_free?t('claimFree'):t('buyMethod')}</button></article>`).join('')||`<div class="empty-state">${t('noMethods')}</div>`}
+async function methodAction(id){let m=methodById(id);if(!m)return;if(!m.unlocked){const restrictions=window.shopData?.restrictions||{};if(restrictions.suspended||restrictions.methods_blocked)return alert(t('methodsRestricted'));if(!m.is_free&&!confirm(t('buyConfirm')(m.title,Number(m.price||0).toLocaleString())))return;try{const r=await fetch('/api/method/'+encodeURIComponent(id)+'/buy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:user.id,sig})});const d=await r.json();if(!r.ok)throw new Error(d.detail||t('unlockFail'));m.unlocked=true;if(Number.isFinite(Number(d.balance))){window.shopData.balance=Number(d.balance);balance.textContent='💳 '+money(d.balance)}renderMethods();if(d.delivery_warning)alert(d.delivery_warning);else if(d.delivery_sent){m.telegram_delivered=true;try{tg?.HapticFeedback?.notificationOccurred('success')}catch{}}}catch(e){alert(e.message);return}}openMethod(id)}
+async function openMethod(id){try{const r=await fetch('/api/method/'+encodeURIComponent(id)+'?user_id='+encodeURIComponent(user.id)+'&sig='+encodeURIComponent(sig));const m=await r.json();if(!r.ok)throw new Error(m.detail||t('openFail'));methodDetailTitle.textContent=m.title||t('method');methodDeliveryNote.textContent=methodById(id)?.telegram_delivered?'✅ '+t('methodSent'):'';currentMethodBody=String(m.body||'');renderMethodGalleryDetail(m);methodDetailBody.innerHTML=methodBodyHtml(currentMethodBody);wireMethodBody();methodSheet.classList.add('open')}catch(e){alert(e.message)}}
+function closeMethod(){methodSheet.classList.remove('open')}
+function openLanguage(){languageSheet.classList.add('open')}function closeLanguage(){languageSheet.classList.remove('open')}
+async function setLanguage(next){if(!['en','id'].includes(next)||next===lang){closeLanguage();return}try{let r=await fetch('/api/language',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({uid:Number(uid),sig,language:next})});if(!r.ok)throw new Error(await r.text());lang=next;applyI18n();closeLanguage();try{tg?.HapticFeedback?.notificationOccurred('success')}catch{}}catch(e){alert(t('languageSaveFail'))}}
+function buyCredits(){const rates=(window.shopData&&window.shopData.creditRates)||{inr:'₹1 = 1 credit',usd:'$1 = 100 credits'};const owner=(window.shopData&&window.shopData.ownerUsername)||'';const msg=`${t('contactHello')}\nTelegram ID: ${user.id}\n${t('contactRates')}: ${rates.inr} | ${rates.usd}\n${t('contactAsk')}`;if(owner){tg.openTelegramLink(`https://t.me/${owner}?text=${encodeURIComponent(msg)}`)}else{alert(`${t('rates')}:\n${rates.inr}\n${rates.usd}\n\n${t('adminNotConfigured')}`)}}
+async function checkout(){
+ if(confirmPayBtn.disabled)return;
+ if(navigator.onLine===false)return toast(ax('offline'));
+ let items=Object.entries(cart).map(([key,qty])=>{let [id,variant_id]=key.split(':');return{id,variant_id,qty}});
+ if(!items.length)return;
+ const purchase_keys={};const emails={};
+ for(const input of document.querySelectorAll('[data-purchase-key]')){
+   const pid=input.dataset.purchaseKey;const value=input.value.trim();
+   if(!value){input.focus();return alert(t('keyMissing'))}
+   purchase_keys[pid]=value
+ }
+ for(const input of document.querySelectorAll('[data-email-line]')){
+   const value=input.value.trim();
+   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)){input.focus();return alert(t('emailInvalid'))}
+   emails[input.dataset.emailLine]=value
+ }
+ const order={type:'order',items,purchase_keys,emails};
+ const serialized=JSON.stringify(order);if(new TextEncoder().encode(serialized).length>4096)return toast(ax('payloadLimit'));
+ if(!tg?.sendData)return alert(t('openTelegram'));
+ const oldText=confirmPayBtn.textContent;confirmPayBtn.disabled=true;confirmPayBtn.textContent=t('validating');
+ try{
+   const r=await fetch('/api/order/validate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({uid:Number(uid),sig,order})});
+   let data={};try{data=await r.json()}catch{}
+   if(!r.ok)throw new Error(data.detail||t('checkoutFailed'));
+   if(Number(data.total)!==totals().t){closeConfirm();await init();throw new Error(ax('priceChanged'))}
+   try{tg?.HapticFeedback?.notificationOccurred('success')}catch{};tg.sendData(serialized);clearSavedCart();tg.close()
+ }catch(e){alert(e.message||t('checkoutFailed'));confirmPayBtn.disabled=false;confirmPayBtn.textContent=oldText}
+}
+</script>
+<script src="/assets/shop-advanced.js?v=2"></script>
+<script>showSkeletons();init().catch(()=>{document.getElementById('grid').innerHTML='<div class="empty-state">'+esc(ax('loadFail'))+'<br><button class="cat" onclick="location.reload()">'+esc(ax('retry'))+'</button></div>'})</script>
+</body></html>
